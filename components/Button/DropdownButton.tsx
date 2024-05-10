@@ -30,9 +30,9 @@ const DropdownButton = ({ DropdownLinks, label, onClick }: Props) => {
         <Image className="w-[12px]" src={ArrowDown} alt="arrow-down" />
       </span>
       <ul
-        className={`absolute shadow-md rounded-sm ${!isOpen && "hidden"} ${
-          isOpen && "block"
-        }`}
+        className={`absolute shadow-md rounded-sm bg-white ${
+          !isOpen && "hidden"
+        } ${isOpen && "block"}`}
       >
         {DropdownLinks.map((item: NavLink, itemIdx: number) => {
           return (
