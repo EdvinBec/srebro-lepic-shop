@@ -18,6 +18,12 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        boska: ["var(--font-boska)"],
+      },
+      backgroundImage: {
+        "hero-image": "url('/assets/HeroBG.jpg')",
+      },
       colors: {
         accentYellow: "#FAD643",
         darkGray: "#191919",

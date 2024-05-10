@@ -3,8 +3,31 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import AttentionRow from "@/components/AttentionRow";
+import localFont from "@next/font/local";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const Boska = localFont({
+  src: [
+    {
+      path: "../public/fonts/Boska-Light.woff2",
+      weight: "300",
+    },
+    {
+      path: "../public/fonts/Boska-Regular.woff2",
+      weight: "400",
+    },
+    {
+      path: "../public/fonts/Boska-Bold.woff2",
+      weight: "700",
+    },
+    {
+      path: "../public/fonts/Boska-Black.woff2",
+      weight: "900",
+    },
+  ],
+  variable: "--font-boska",
+});
 
 export const metadata: Metadata = {
   title: "Srebro Lepić",
@@ -17,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${Boska.variable} font-boska`}>
       <body className={inter.className}>
         <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
         <NavigationBar />
