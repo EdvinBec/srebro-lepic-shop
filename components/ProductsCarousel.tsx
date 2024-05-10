@@ -17,7 +17,7 @@ type Props = {
 
 const ProductsCarousel = ({ Products }: Props) => {
   return (
-    <Carousel className="w-full max-w-[90%] mx-auto mt-8 md:mt-8">
+    <Carousel className="w-full max-w-[90%] mx-auto mt-8 md:mt-8 text-darkGray">
       <CarouselContent>
         {Products.map((item: Product, itemIdx: number) => {
           return (
@@ -43,8 +43,8 @@ const ProductsCarousel = ({ Products }: Props) => {
           );
         })}
       </CarouselContent>
-      <CarouselPrevious className="ml-10 md:ml-0" />
-      <CarouselNext className="mr-10 md:mr-0" />
+      <CarouselPrevious className="ml-5 md:ml-0" />
+      <CarouselNext className="mr-5 md:mr-0" />
     </Carousel>
   );
 };

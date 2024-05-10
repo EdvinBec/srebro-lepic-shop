@@ -1,26 +1,43 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 type Props = {
   variant?: "primary" | "secondary" | "outline";
   children?: React.ReactNode;
+  className?: string;
 };
 
-const Button = ({ variant = "primary", children }: Props) => {
+const Button = ({ variant = "primary", children, className }: Props) => {
   if (variant === "primary") {
     return (
-      <button className="bg-white text-darkGray px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8">
+      <button
+        className={cn(
+          "bg-white text-darkGray px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8",
+          className
+        )}
+      >
         {children}
       </button>
     );
   } else if (variant === "secondary") {
     return (
-      <button className=" bg-darkGray text-white px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8">
+      <button
+        className={cn(
+          "bg-darkGray text-white px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8",
+          className
+        )}
+      >
         {children}
       </button>
     );
   } else if (variant === "outline") {
     return (
-      <button className="border border-darkGray text-darkGray px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8">
+      <button
+        className={cn(
+          "bg-none text-darkGray px-5 py-3 font-bold uppercase text-sm tracking-tight rounded-[1px] mt-5 md:mt-8",
+          className
+        )}
+      >
         {children}
       </button>
     );

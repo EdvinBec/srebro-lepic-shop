@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        desktop: "1280px",
+      },
       fontFamily: {
         boska: ["var(--font-boska)"],
       },

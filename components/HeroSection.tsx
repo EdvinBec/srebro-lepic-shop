@@ -4,7 +4,7 @@ import Button from "./Button/Button";
 
 const HeroSection = () => {
   return (
-    <section className="bg-center bg-no-repeat bg-hero-image py-12 md:py-16">
+    <section className="bg-center bg-repeat bg-hero-image py-12 md:py-16">
       <MaxWidthWrapper>
         <div className="w-4/5 lg:w-2/3">
           <h1 className="text-8xl mb-2.5 font-bold text-white font-boska">
