@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import StarsLeft from "@/assets/stars-left.svg";
-import StarsRight from "@/assets/stars-right.svg";
+import StarsLeft from "@/public/assets/stars-left.svg";
+import StarsRight from "@/public/assets/stars-right.svg";
 
 type Props = {
   label: string;
