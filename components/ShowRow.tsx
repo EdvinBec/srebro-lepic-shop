@@ -15,7 +15,7 @@ const ShowRow = ({ image, className }: Props) => {
         className
       )}
     >
-      {Array.from({ length: 8 }).map((item, itemIdx: number) => {
+      {Array.from({ length: 20 }).map((item, itemIdx: number) => {
         return (
           <Image
             key={itemIdx}

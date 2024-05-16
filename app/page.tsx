@@ -10,6 +10,7 @@ import { Product } from "@/types";
 import Image from "next/image";
 import Article from "@/components/Article";
 import Pandora from "@/public/assets/Pandora.svg";
+import DanielKlein from "@/public/assets/DanielKlein.svg";
 import ShowRow from "@/components/ShowRow";
 
 const Products: Product[] = [
@@ -98,6 +99,7 @@ export default function Home() {
           </div>
         </section>
       </MaxWidthWrapper>
+      <ShowRow image={DanielKlein} className="my-8 md:my-12" />
     </div>
   );
 }
