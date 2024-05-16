@@ -20,7 +20,7 @@ const Article = ({
 }: Props) => {
   if (side === "left") {
     return (
-      <section className="text-darkGray bg-white rounded-[1px] p-4 md:p-8 mt-12 flex flex-col lg:flex-row lg:gap-10 min-w-full">
+      <section className="text-darkGray bg-white rounded-[1px] p-4 py-6 md:p-8 mt-12 flex flex-col lg:flex-row lg:gap-10 min-w-full">
         <div className="lg:w-2/3">
           <Image src={image} alt="necklace" className="w-full" />
         </div>
@@ -37,9 +37,9 @@ const Article = ({
     );
   } else {
     return (
-      <section className="text-darkGray bg-white rounded-[1px] p-10 mt-12 flex flex-col lg:flex-row lg:gap-12 min-w-full">
-        <div className="mb-4">
-          <h2 className="mt-4 uppercase font-boska font-bold text-3xl md:text-5xl lg:text-3xl desktop:text-5xl">
+      <section className="text-darkGray bg-white rounded-[1px] p-4 py-6 md:p-8 mt-12 flex flex-col lg:flex-row lg:gap-12 min-w-full">
+        <div className="lg:w-2/5 mb-4">
+          <h2 className="md:mt-4 uppercase font-boska font-bold text-3xl md:text-5xl lg:text-3xl desktop:text-5xl">
             {heading}
           </h2>
           {children}
@@ -47,7 +47,9 @@ const Article = ({
             {buttonLabel}
           </Button>
         </div>
-        <Image src={image} alt="necklace" />
+        <div className="lg:w-2/3">
+          <Image src={image} alt="necklace" className="w-full" />
+        </div>
       </section>
     );
   }

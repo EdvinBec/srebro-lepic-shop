@@ -100,6 +100,29 @@ export default function Home() {
         </section>
       </MaxWidthWrapper>
       <ShowRow image={DanielKlein} className="my-8 md:my-12" />
+      <MaxWidthWrapper>
+        <Article
+          heading="PERSONALIZOVANI POKLONI"
+          buttonLabel="Istražite našu kolekciju"
+          image={Nadia}
+          side="right"
+        >
+          <div>
+            <p className="text-sm mt-4">
+              Tražite nešto posebno? Nalazite se na pravom mjestu.
+            </p>
+            <p className="text-sm mt-4">
+              U Srebro Lepić, stvaramo više od nakita. Naša kolekcija narukvica
+              i ogrlica s personaliziranim imenima ili posvetama po vašoj želji
+              jamči, da ćete pronaći savršen poklon.{" "}
+            </p>
+            <p className="text-sm mt-4">
+              Zamislite iznenađenje na licu vašeg voljenog dok otvara poklon
+              koji je posebno stvoren samo za njih.{" "}
+            </p>
+          </div>
+        </Article>
+      </MaxWidthWrapper>
     </div>
   );
 }
