@@ -82,6 +82,22 @@ export default function Home() {
         </Article>
       </MaxWidthWrapper>
       <ShowRow image={Pandora} className="my-8 md:my-12" />
+      <MaxWidthWrapper>
+        <section>
+          <div>
+            <Heading side="left" className="mt-10 md:mt-16">
+              Prstenje
+            </Heading>
+            <ProductsCarousel Products={Products} />
+          </div>
+          <div>
+            <Heading side="left" className="mt-10 md:mt-16">
+              Ogrlice
+            </Heading>
+            <ProductsCarousel Products={Products} />
+          </div>
+        </section>
+      </MaxWidthWrapper>
     </div>
   );
 }
