@@ -7,7 +7,7 @@ const HeroSection = () => {
     <section className="bg-center bg-repeat bg-hero-image py-12 md:py-16 max-h-[550px]">
       <MaxWidthWrapper>
         <div className="w-4/5 lg:w-2/3">
-          <h1 className="text-8xl mb-2.5 font-bold text-white font-boska">
+          <h1 className="md:text-8xl text-7xl mb-2.5 font-bold text-white font-boska">
             SVE NA JEDNOM MJESTU
           </h1>
           <p className="text-white text-lg leading-6 font-light md:w-2/3">

@@ -7,12 +7,12 @@ import Roza from "@/public/assets/Roza.jpg";
 import Nadia from "@/public/assets/Nadia.jpg";
 import { Product } from "@/types";
 
-import Image from "next/image";
 import Article from "@/components/Article";
 import Pandora from "@/public/assets/Pandora.svg";
 import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
 import ShowRow from "@/components/ShowRow";
+import Footer from "@/components/Footer";
 
 const Products: Product[] = [
   {
@@ -124,6 +124,7 @@ export default function Home() {
           </div>
         </Article>
       </MaxWidthWrapper>
+      <Footer className="mt-12" />
     </div>
   );
 }
