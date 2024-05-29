@@ -54,11 +54,17 @@ const NavigationBar = (props: Props) => {
             return (
               <li
                 key={itemIdx}
-                className="hover:opacity-75 transition-all ease-in-out duration-150"
+                className="hover:opacity-90 transition-all ease-in-out duration-150"
               >
-                <Link className="text-sm text-darkGray" href={item.href}>
-                  {item.label}
-                </Link>
+                <div className="group inline-block">
+                  <Link
+                    className="text-sm text-darkGray relative pb-1"
+                    href={item.href}
+                  >
+                    {item.label}
+                    <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-current transition-all duration-500 group-hover:w-full group-hover:left-0"></span>
+                  </Link>
+                </div>
               </li>
             );
           })}
@@ -68,7 +74,6 @@ const NavigationBar = (props: Props) => {
           <Image src={Logo} alt="logo" />
         </Link>
         <div className="flex justify-end items-center gap-2 w-1/3">
-          <Label className="hidden md:block">BA</Label>
           <button
             className="md:hidden"
             onClick={() => {

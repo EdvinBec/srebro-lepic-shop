@@ -59,13 +59,22 @@ const Footer = ({ className }: Props) => {
             <div className="hidden md:flex flex-col">
               <Label className="text-sm text-darkGray">Navigacija</Label>
               <ul className="flex flex-col gap-5 mt-7">
-                <Link href="/kategorije" className=" text-[18px] font-medium">
+                <Link
+                  href="/kategorije"
+                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
+                >
                   Kategorije
                 </Link>
-                <Link href="/kategorije" className=" text-[18px] font-medium">
+                <Link
+                  href="/kategorije"
+                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
+                >
                   O nama
                 </Link>
-                <Link href="/kategorije" className=" text-[18px] font-medium">
+                <Link
+                  href="/kategorije"
+                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
+                >
                   Kontakt
                 </Link>
               </ul>
@@ -78,14 +87,20 @@ const Footer = ({ className }: Props) => {
                   className="max-w-[150px]"
                 />
                 <Label className="text-sm mt-1">
-                  Sa zadovoljstvom ispunjavamo vaše želje.
+                  Sa zadovoljstvom ispunjavamo <br /> vaše želje.
                 </Label>
               </div>
               <div className="flex flex-col md:flex-row gap-2">
-                <Link href="privacy-policy" className="text-sm opacity-90">
+                <Link
+                  href="privacy-policy"
+                  className="text-sm opacity-90 hover:opacity-75 transition-all duration-150"
+                >
                   Uslovi korištenja
                 </Link>
-                <Link href="privacy-policy" className="text-sm opacity-90">
+                <Link
+                  href="privacy-policy"
+                  className="text-sm opacity-90 hover:opacity-75 transition-all duration-150"
+                >
                   Politika privatnosti
                 </Link>
               </div>
@@ -94,20 +109,50 @@ const Footer = ({ className }: Props) => {
             <div>
               <Label className="text-sm text-darkGray">Nadjite nas na</Label>
               <div className="flex gap-4 md:gap-8 mt-7">
-                <Image src={Facebook} alt="Facebook" />
-                <Image src={Instagram} alt="Instagram" />
+                <Link href="#">
+                  <Image
+                    src={Facebook}
+                    alt="Facebook"
+                    className="hover:opacity-75 transition-all duration-150"
+                  />
+                </Link>
+                <Link href="#">
+                  <Image
+                    src={Instagram}
+                    alt="Instagram"
+                    className="hover:opacity-75 transition-all duration-150"
+                  />
+                </Link>
               </div>
               <div className="flex gap-4 md:gap-8 mt-6 md:mt-10">
-                <Image src={TikTok} alt="Tiktok" />
-                <Image src={Youtube} alt="Youtube" />
+                <Link href="#">
+                  <Image
+                    src={TikTok}
+                    alt="Tiktok"
+                    className="hover:opacity-75 transition-all duration-150"
+                  />
+                </Link>
+                <Link href="#">
+                  <Image
+                    src={Youtube}
+                    alt="Youtube"
+                    className="hover:opacity-75 transition-all duration-150"
+                  />
+                </Link>
               </div>
             </div>
           </div>
           <div className="hidden md:flex flex-col md:flex-row gap-5">
-            <Link href="privacy-policy" className="text-sm opacity-90">
+            <Link
+              href="privacy-policy"
+              className="text-sm opacity-90 hover:opacity-75 transition-all duration-150"
+            >
               Uslovi korištenja
             </Link>
-            <Link href="privacy-policy" className="text-sm opacity-90">
+            <Link
+              href="privacy-policy"
+              className="text-sm opacity-90 hover:opacity-75 transition-all duration-150"
+            >
               Politika privatnosti
             </Link>
           </div>

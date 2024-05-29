@@ -23,7 +23,7 @@ const ProductsCarousel = ({ Products }: Props) => {
           return (
             <CarouselItem
               key={itemIdx}
-              className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center"
+              className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center hover:opacity-85 hover:shadow-md transition-all duration-200"
             >
               <Link href={item.url}>
                 <div className="bg-white p-5 rounded-[1px] shadow-sm ">
