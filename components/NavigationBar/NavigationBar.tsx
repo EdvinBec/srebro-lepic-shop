@@ -48,7 +48,7 @@ const NavigationBar = (props: Props) => {
 
   return (
     <MaxWidthWrapper className="px-0 md:px-2 lg:px-20">
-      <nav className="flex justify-between items-center px-4 py-4">
+      <nav className="flex justify-between items-center py-4">
         <ul className="gap-6 hidden md:flex w-1/3">
           {NavLinks.map((item: NavLink, itemIdx: number) => {
             return (
@@ -59,7 +59,7 @@ const NavigationBar = (props: Props) => {
                 <div className="group inline-block">
                   <Link
                     className="text-sm text-darkGray relative pb-1"
-                    href={item.href}
+                    href={`/kategorija${item.href}`}
                   >
                     {item.label}
                     <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-current transition-all duration-500 group-hover:w-full group-hover:left-0"></span>

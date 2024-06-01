@@ -4,6 +4,7 @@ import "./globals.css";
 import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import AttentionRow from "@/components/AttentionRow";
 import localFont from "@next/font/local";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
         <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
         <NavigationBar />
         {children}
+        <Footer className="mt-12" />
       </body>
     </html>
   );

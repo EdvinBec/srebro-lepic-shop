@@ -7,9 +7,15 @@ type Props = {
   children?: React.ReactNode;
   className?: string;
   side?: "left" | "right" | "center";
+  star?: boolean;
 };
 
-const Heading = ({ children, className, side = "center" }: Props) => {
+const Heading = ({
+  children,
+  className,
+  side = "center",
+  star = true,
+}: Props) => {
   return (
     <div
       className={cn(
@@ -20,11 +26,19 @@ const Heading = ({ children, className, side = "center" }: Props) => {
       )}
     >
       <div className="flex items-start gap-5 md:gap-14">
-        <Image src={Star} alt="star" className="h-[70px] md:h-full" />
+        <Image
+          src={Star}
+          alt="star"
+          className={`h-[70px] md:h-full ${!star && "hidden"}`}
+        />
         <h1 className="font-boska text-center font-bold uppercase text-3xl md:text-5xl">
           {children}
         </h1>
-        <Image src={Star} alt="star" className="h-[70px] md:h-full" />
+        <Image
+          src={Star}
+          alt="star"
+          className={`h-[70px] md:h-full ${!star && "hidden"}`}
+        />
       </div>
     </div>
   );

@@ -124,7 +124,6 @@ export default function Home() {
           </div>
         </Article>
       </MaxWidthWrapper>
-      <Footer className="mt-12" />
     </div>
   );
 }
