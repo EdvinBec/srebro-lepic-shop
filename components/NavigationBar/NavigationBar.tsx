@@ -98,8 +98,12 @@ const NavigationBar = (props: Props) => {
               <li
                 key={itemIdx}
                 className="hover:opacity-75 transition-all ease-in-out duration-150 py-1"
+                onClick={() => setIsOpen(false)}
               >
-                <Link className="text-sm text-darkGray" href={item.href}>
+                <Link
+                  className="text-sm text-darkGray"
+                  href={`/kategorija${item.href}`}
+                >
                   {item.label}
                 </Link>
               </li>
@@ -110,8 +114,12 @@ const NavigationBar = (props: Props) => {
               <li
                 key={itemIdx}
                 className="hover:opacity-75 transition-all ease-in-out duration-150 py-1"
+                onClick={() => setIsOpen(false)}
               >
-                <Link className="text-sm text-darkGray" href={item.href}>
+                <Link
+                  className="text-sm text-darkGray"
+                  href={`/kategorija${item.href}`}
+                >
                   {item.label}
                 </Link>
               </li>
