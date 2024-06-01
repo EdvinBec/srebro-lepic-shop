@@ -10,6 +10,7 @@ import Image from "next/image";
 import Logo from "@/public/assets/logo.svg";
 import { Product } from "@/types";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/utils";
 
 type Props = {
   Products: Product[];
@@ -25,10 +26,10 @@ const ProductsCarousel = ({ Products }: Props) => {
               key={itemIdx}
               className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center hover:opacity-85 hover:shadow-md transition-all duration-200"
             >
-              <Link href={item.url}>
+              <Link href="/">
                 <div className="bg-white p-5 rounded-[1px] shadow-sm ">
                   <Image
-                    src={item.imageURL}
+                    src={item.image}
                     alt={item.title}
                     height={200}
                     width={300}
@@ -36,7 +37,7 @@ const ProductsCarousel = ({ Products }: Props) => {
                   />
                   <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
                   <h3 className="text-sm mt-1.5">{item.title}</h3>
-                  <p className=" mt-2.5">{item.price}</p>
+                  <p className=" mt-2.5">{formatCurrency(item.price)}</p>
                 </div>
               </Link>
             </CarouselItem>

@@ -16,40 +16,34 @@ import Footer from "@/components/Footer";
 
 const Products: Product[] = [
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "29,90 KM",
-    url: "/",
+    price: 59.9,
   },
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "59,90 KM",
-    url: "/",
+    price: 59.9,
   },
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "29,90 KM",
-    url: "/",
+    price: 20.9,
   },
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "59,90 KM",
-    url: "/",
+    price: 59.9,
   },
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "29,90 KM",
-    url: "/",
+    price: 49.9,
   },
   {
-    imageURL: Roza,
+    image: Roza,
     title: "SLRO - Srebro Lepić sa posvetom",
-    price: "59,90 KM",
-    url: "/",
+    price: 59.9,
   },
 ];
 

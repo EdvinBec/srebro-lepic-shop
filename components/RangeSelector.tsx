@@ -8,13 +8,18 @@ const PriceRangeSelector = ({
   max = 1000,
   className,
   onChange,
+  currentPrices,
 }: {
   onChange: (value: number[]) => void;
   className?: string;
   max: number;
   min: number;
+  currentPrices: number[];
 }) => {
-  const [priceRange, setPriceRange] = useState([min, max]);
+  const [priceRange, setPriceRange] = useState([
+    currentPrices[0],
+    currentPrices[1],
+  ]);
 
   const handleSliderChange = (value: any) => {
     setPriceRange(value);

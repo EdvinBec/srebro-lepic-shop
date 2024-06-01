@@ -1,4 +1,4 @@
-import { IconNode, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 export type NavLink = {
   label: string;
@@ -6,10 +6,11 @@ export type NavLink = {
 };
 
 export type Product = {
-  imageURL: any;
+  image: any;
   title: string;
-  price: string;
-  url: "/";
+  price: number;
+  category?: string;
+  material?: "Zlato" | "srebro" | "gvožđe";
 };
 
 export type ButtonOption = {

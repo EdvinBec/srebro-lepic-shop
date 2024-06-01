@@ -22,17 +22,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   BarChart,
-  ChevronDown,
   DollarSign,
   Euro,
   Minus,
@@ -42,9 +34,74 @@ import {
   Sparkles,
   Star,
   StarHalf,
+  Trash,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Bar, ResponsiveContainer } from "recharts";
+import Roza from "@/public/assets/Roza.jpg";
+import { Product } from "@/types";
+import Link from "next/link";
+import Image from "next/image";
+import Logo from "@/public/assets/logo.svg";
+import { formatCurrency } from "@/lib/utils";
+
+const ProductsFake: Product[] = [
+  {
+    image: Roza,
+    title: "SLRO - Nausnice 1",
+    price: 999,
+    category: "nausnice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Nausnice 2",
+    price: 560,
+    category: "nausnice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Nausnice 3",
+    price: 94,
+    category: "nausnice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Ogrlica 1",
+    price: 10,
+    category: "ogrlice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Ogrlica 2",
+    price: 200,
+    category: "ogrlice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Ogrlica 3",
+    price: 300,
+    category: "ogrlice",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Prsten 1",
+    price: 100,
+    category: "prstenje",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Prsten 2",
+    price: 300,
+    category: "prstenje",
+    material: "Zlato",
+  },
+  {
+    image: Roza,
+    title: "SLRO - Prsten 3",
+    price: 300,
+    category: "prstenje",
+  },
+];
 
 type Props = {
   params: { slug: string };
@@ -52,10 +109,38 @@ type Props = {
 
 const CategoryPage = ({ params }: Props) => {
   const [goal, setGoal] = useState(30);
-  const [sort, setSort] = useState("random"); //Sorting products by option
-  const [material, setMaterial] = useState("all"); //Sorting products by material
+  const [sort, setSort] = useState("random"); // Sorting products by option
+  const [material, setMaterial] = useState("all"); // Sorting products by material
   const [ringSize, setRingSize] = useState(goal);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [products, setProducts] = useState(ProductsFake);
+
+  useEffect(() => {
+    filterAndSortProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort, material, priceRange]);
+
+  const filterAndSortProducts = () => {
+    let filteredProducts = ProductsFake.filter(
+      (item: Product) =>
+        item.category === params.slug &&
+        item.price >= priceRange[0] &&
+        item.price <= priceRange[1] &&
+        (item.material === material || material === "all")
+    );
+
+    if (sort === "Skuplje naprijed") {
+      filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
+    } else if (sort === "Jeftinije naprijed") {
+      filteredProducts = filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sort === "Veći popust naprijed") {
+      // Add logic for discount sorting if applicable
+    } else if (sort === "Novije naprijed") {
+      // Add logic for date sorting if applicable
+    }
+
+    setProducts(filteredProducts);
+  };
 
   const SetPriceRange = (range: number[]) => {
     setPriceRange(range);
@@ -67,7 +152,6 @@ const CategoryPage = ({ params }: Props) => {
 
   const SortElements = (name: string) => {
     setSort(name);
-    console.log(sort);
   };
 
   function onClick(adjustment: number) {
@@ -79,48 +163,59 @@ const CategoryPage = ({ params }: Props) => {
       label: "Skuplje naprijed",
       rightIcon: "⇩",
       leftIcon: DollarSign,
-      function: SortElements,
+      function: () => SortElements("Skuplje naprijed"),
     },
     {
       label: "Jeftinije naprijed",
       rightIcon: "⇧",
       leftIcon: Euro,
-      function: SortElements,
+      function: () => SortElements("Jeftinije naprijed"),
     },
     {
       label: "Veći popust naprijed",
       rightIcon: "%",
       leftIcon: Percent,
-      function: SortElements,
+      function: () => SortElements("Veći popust naprijed"),
     },
     {
       label: "Novije naprijed",
       rightIcon: "⌘",
       leftIcon: Newspaper,
-      function: SortElements,
+      function: () => SortElements("Novije naprijed"),
+    },
+    {
+      label: "Izbriši filter",
+      leftIcon: Trash,
+      function: () => SortElements("random"),
     },
   ];
+
   const MaterialButtonOptions = [
     {
       label: "Gvožđe",
       leftIcon: StarHalf,
-      function: MaterialSort,
+      function: () => MaterialSort("Gvožđe"),
     },
     {
       label: "Srebro",
       leftIcon: Star,
-      function: MaterialSort,
+      function: () => MaterialSort("Srebro"),
     },
     {
       label: "Zlato",
       leftIcon: Sparkles,
-      function: MaterialSort,
+      function: () => MaterialSort("Zlato"),
+    },
+    {
+      label: "Izbriši filter",
+      leftIcon: Trash,
+      function: () => MaterialSort("all"),
     },
   ];
 
   return (
-    <div className="flex">
-      <div className="w-1/4 flex flex-col items-start">
+    <div className="flex gap-4">
+      <div className="w-1/4 md:flex flex-col items-start hidden">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -140,7 +235,7 @@ const CategoryPage = ({ params }: Props) => {
         </Heading>
       </div>
       <div className="w-full">
-        <div className="flex gap-5">
+        <div className="flex gap-5 ml-2 flex-wrap">
           <DropdownButtonShadcn
             label="Poredaj po"
             ButtonOptions={SortButtonOptions}
@@ -202,12 +297,10 @@ const CategoryPage = ({ params }: Props) => {
                       <BarChart>
                         <Bar
                           dataKey="goal"
-                          style={
-                            {
-                              fill: "hsl(var(--foreground))",
-                              opacity: 0.9,
-                            } as React.CSSProperties
-                          }
+                          style={{
+                            fill: "hsl(var(--foreground))",
+                            opacity: 0.9,
+                          }}
                         />
                       </BarChart>
                     </ResponsiveContainer>
@@ -253,6 +346,7 @@ const CategoryPage = ({ params }: Props) => {
                 </DrawerHeader>
                 <div className="p-4 pb-0">
                   <PriceRangeSelector
+                    currentPrices={priceRange}
                     className="mt-4 mb-12"
                     onChange={SetPriceRange}
                     min={0}
@@ -277,6 +371,30 @@ const CategoryPage = ({ params }: Props) => {
             label="Material"
             ButtonOptions={MaterialButtonOptions}
           />
+        </div>
+        <div className="mt-8 grid justify-items-center  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {products.map((item: Product, itemIdx: number) => {
+            return (
+              <Link
+                href="/"
+                key={itemIdx}
+                className="p-2 hover:shadow-sm transition-all duration-200 hover:opacity-85"
+              >
+                <div className="">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    height={200}
+                    width={300}
+                    className="object-cover rounded-[1px] h-[200px] w-[300px]"
+                  />
+                  <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
+                  <h3 className="text-sm mt-1.5">{item.title}</h3>
+                  <p className=" mt-2.5">{formatCurrency(item.price)}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
