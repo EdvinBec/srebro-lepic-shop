@@ -9,7 +9,7 @@ export type Product = {
   image: any;
   title: string;
   price: number;
-  category?: string;
+  category?: "prstenje" | "nausnice" | "ogrlice" | "narukvice" | "satovi";
   material?: "Zlato" | "srebro" | "gvožđe";
 };
 
