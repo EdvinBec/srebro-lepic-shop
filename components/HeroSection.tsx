@@ -1,6 +1,7 @@
 import React from "react";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import Button from "./Button/Button";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -14,7 +15,9 @@ const HeroSection = () => {
             Zaustavite potragu - ovdje ste pronašli sve što tražite. Želite li
             nešto više od običnog nakita? Mi smo upravo ono što tražite.
           </p>
-          <Button>Pogledajte našu ponudu</Button>
+          <Button>
+            <Link href="/kategorija/ponuda">Pogledajte našu ponudu</Link>
+          </Button>
         </div>
       </MaxWidthWrapper>
     </section>

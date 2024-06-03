@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import Button from "./Button/Button";
-import { Heading } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   side?: "left" | "right";
@@ -9,6 +9,7 @@ type Props = {
   image: any;
   buttonLabel: string;
   children: React.ReactNode;
+  href: string;
 };
 
 const Article = ({
@@ -17,6 +18,7 @@ const Article = ({
   heading,
   buttonLabel,
   side = "left",
+  href,
 }: Props) => {
   if (side === "left") {
     return (
@@ -30,7 +32,7 @@ const Article = ({
           </h2>
           {children}
           <Button className="w-full" variant="secondary">
-            {buttonLabel}
+            <Link href={href}>{buttonLabel}</Link>
           </Button>
         </div>
       </section>
@@ -44,7 +46,7 @@ const Article = ({
           </h2>
           {children}
           <Button className="w-full" variant="secondary">
-            {buttonLabel}
+            <Link href={href}>{buttonLabel}</Link>
           </Button>
         </div>
         <div className="lg:w-2/3">

@@ -8,19 +8,24 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import Logo from "@/public/assets/logo.svg";
-import { Product } from "@/types";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/formatters";
+import { Product } from "@prisma/client";
 
 type Props = {
   Products: Product[];
+  category?: string;
 };
 
-const ProductsCarousel = ({ Products }: Props) => {
+const ProductsCarousel = ({ Products, category }: Props) => {
+  const filteredProducts =
+    (category &&
+      Products.filter((item: Product) => item.category === category)) ||
+    Products;
   return (
     <Carousel className="w-full max-w-[90%] mx-auto mt-8 md:mt-8 text-darkGray">
       <CarouselContent>
-        {Products.map((item: Product, itemIdx: number) => {
+        {filteredProducts.map((item: Product, itemIdx: number) => {
           return (
             <CarouselItem
               key={itemIdx}
@@ -30,14 +35,14 @@ const ProductsCarousel = ({ Products }: Props) => {
                 <div className="bg-white p-5 rounded-[1px] shadow-sm ">
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={item.name}
                     height={200}
                     width={300}
                     className="object-cover rounded-[1px] h-[200px] w-[300px]"
                   />
                   <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
-                  <h3 className="text-sm mt-1.5">{item.title}</h3>
-                  <p className=" mt-2.5">{formatCurrency(item.price)}</p>
+                  <h3 className="text-sm mt-1.5">{item.name}</h3>
+                  <p className=" mt-2.5">{formatCurrency(item.priceInCents)}</p>
                 </div>
               </Link>
             </CarouselItem>

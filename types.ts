@@ -5,17 +5,9 @@ export type NavLink = {
   href: string;
 };
 
-export type Product = {
-  image: any;
-  title: string;
-  price: number;
-  category?: "prstenje" | "nausnice" | "ogrlice" | "narukvice" | "satovi";
-  material?: "Zlato" | "srebro" | "gvožđe";
-};
-
 export type ButtonOption = {
   rightIcon?: string;
   leftIcon: LucideIcon;
   label: string;
-  function?: (name: string) => void;
+  value: string;
 };

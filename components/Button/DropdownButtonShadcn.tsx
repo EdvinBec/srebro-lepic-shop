@@ -10,15 +10,45 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { ChevronDown, Icon, IconNode, icons } from "lucide-react";
+import {
+  ChevronDown,
+  DollarSign,
+  Euro,
+  Icon,
+  IconNode,
+  Newspaper,
+  Percent,
+  Trash,
+  icons,
+} from "lucide-react";
 import { ButtonOption } from "@/types";
 
 type Props = {
-  ButtonOptions: ButtonOption[];
   label: string;
+  onSave: (label: string) => void;
 };
 
-const DropdownButtonShadcn = ({ ButtonOptions, label }: Props) => {
+const ButtonOptions = [
+  {
+    label: "Skuplje naprijed",
+    rightIcon: "⇩",
+    leftIcon: DollarSign,
+    value: "priceAsc",
+  },
+  {
+    label: "Jeftinije naprijed",
+    rightIcon: "⇧",
+    leftIcon: Euro,
+    value: "priceDesc",
+  },
+  {
+    label: "Izbriši filter",
+    leftIcon: Trash,
+    value: "clear",
+  },
+];
+
+const DropdownButtonShadcn = ({ label, onSave }: Props) => {
   const [newLabel, setNewLabel] = useState(label);
 
   return (
@@ -41,7 +71,7 @@ const DropdownButtonShadcn = ({ ButtonOptions, label }: Props) => {
                 key={itemIdx}
                 className="rounded-[1px]"
                 onClick={() => {
-                  item.function!(item.label);
+                  onSave(item.value);
                   setNewLabel(item.label);
                 }}
               >

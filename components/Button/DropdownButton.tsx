@@ -40,7 +40,7 @@ const DropdownButton = ({ DropdownLinks, label, onClick }: Props) => {
               className="px-4 py-2 text-left text-sm hover:opacity-75 transition-all ease-in-out duration-150"
               key={itemIdx}
             >
-              <Link href={item.href}>{item.label}</Link>
+              <Link href={`${item.href}`}>{item.label}</Link>
             </li>
           );
         })}

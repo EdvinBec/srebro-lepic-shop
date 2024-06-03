@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/card";
 import db from "@/db/db";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
-import { format } from "path";
 import React from "react";
 
 type Props = {};
 
+// Function to get sales data
 const getSalesData = async () => {
   const data = await db.order.aggregate({
     _sum: {
@@ -27,7 +27,8 @@ const getSalesData = async () => {
   };
 };
 
-const getUsetData = async () => {
+// Function to get user data
+const getUserData = async () => {
   const [userCount, orderData] = await Promise.all([
     db.user.count(),
     db.order.aggregate({
@@ -45,6 +46,8 @@ const getUsetData = async () => {
         : (orderData._sum.pricePaidInCents || 0) / userCount / 100,
   };
 };
+
+// Function to get product data
 const getProductData = async () => {
   const [activeCount, inactiveCount] = await Promise.all([
     db.product.count({ where: { isAvailabileForPurchase: true } }),
@@ -57,10 +60,11 @@ const getProductData = async () => {
   };
 };
 
+// Main page component
 const page = async (props: Props) => {
   const [salesData, userData, productData] = await Promise.all([
     getSalesData(),
-    getUsetData(),
+    getUserData(),
     getProductData(),
   ]);
 
@@ -92,17 +96,14 @@ const page = async (props: Props) => {
 
 export default page;
 
+// Component for displaying dashboard cards
 type DashboardCardProps = {
   title: string;
   subtitle: string;
   body: string;
 };
 
-export const DashboardCard = ({
-  title,
-  subtitle,
-  body,
-}: DashboardCardProps) => {
+const DashboardCard = ({ title, subtitle, body }: DashboardCardProps) => {
   return (
     <Card>
       <CardHeader>

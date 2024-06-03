@@ -3,63 +3,33 @@ import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductsCarousel from "@/components/ProductsCarousel";
 
-import Roza from "@/public/assets/Roza.jpg";
 import Nadia from "@/public/assets/Nadia.jpg";
-import { Product } from "@/types";
 
 import Article from "@/components/Article";
 import Pandora from "@/public/assets/Pandora.svg";
 import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
 import ShowRow from "@/components/ShowRow";
-import Footer from "@/components/Footer";
+import db from "@/db/db";
 
-const Products: Product[] = [
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 59.9,
-  },
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 59.9,
-  },
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 20.9,
-  },
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 59.9,
-  },
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 49.9,
-  },
-  {
-    image: Roza,
-    title: "SLRO - Srebro Lepić sa posvetom",
-    price: 59.9,
-  },
-];
+export default async function Home() {
+  const products = await db.product.findMany({
+    where: { isAvailabileForPurchase: true },
+  });
 
-export default function Home() {
   return (
-    <div className="bg-slate-50">
+    <div className="">
       <HeroSection />
       <MaxWidthWrapper>
         <section>
           <Heading className="mt-10 md:mt-16">Naše preporuke</Heading>
-          <ProductsCarousel Products={Products} />
+          <ProductsCarousel Products={products} />
         </section>
         <Article
           heading="PERSONALIZOVANI POKLONI"
           buttonLabel="Istražite našu kolekciju"
           image={Nadia}
+          href="/sa-porukom"
         >
           <div>
             <p className="text-sm mt-4">
@@ -84,13 +54,13 @@ export default function Home() {
             <Heading side="left" className="mt-10 md:mt-16">
               Prstenje
             </Heading>
-            <ProductsCarousel Products={Products} />
+            <ProductsCarousel Products={products} category="prstenje" />
           </div>
           <div>
             <Heading side="left" className="mt-10 md:mt-16">
               Ogrlice
             </Heading>
-            <ProductsCarousel Products={Products} />
+            <ProductsCarousel Products={products} category="ogrlice" />
           </div>
         </section>
       </MaxWidthWrapper>
@@ -101,6 +71,7 @@ export default function Home() {
           buttonLabel="Istražite našu kolekciju"
           image={Clock}
           side="right"
+          href="/kategorija/satovi"
         >
           <div>
             <p className="text-sm mt-4">

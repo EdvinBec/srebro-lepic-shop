@@ -6,7 +6,6 @@ import Logo from "@/public/assets/logo.svg";
 import HamburgerMenu from "@/public/assets/Hamburger.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { Label } from "../ui/label";
 import CartButton from "../Button/CartButton";
 import { NavLink } from "@/types";
 import DropdownButton from "../Button/DropdownButton";
@@ -31,7 +30,7 @@ const NavLinks: NavLink[] = [
 const DropdownLinks: NavLink[] = [
   {
     label: "Satovi",
-    href: "/satovi",
+    href: "/kategorija/satovi",
   },
   {
     label: "Nakit po narudžbi",
