@@ -16,9 +16,6 @@
 # production
 /build
 
-.env
-.env.local
-
 # misc
 .DS_Store
 *.pem
@@ -40,3 +37,5 @@ next-env.d.ts
 
 /products
 /public/products
+
+.env
