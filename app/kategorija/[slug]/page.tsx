@@ -43,7 +43,7 @@ import { Product } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/public/assets/logo.svg";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/formatters";
 
 const ProductsFake: Product[] = [
   {

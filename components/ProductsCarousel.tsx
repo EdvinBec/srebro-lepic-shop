@@ -10,7 +10,7 @@ import Image from "next/image";
 import Logo from "@/public/assets/logo.svg";
 import { Product } from "@/types";
 import Link from "next/link";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/formatters";
 
 type Props = {
   Products: Product[];
