@@ -2,8 +2,8 @@
 
 import db from "@/db/db";
 import { z } from "zod";
-import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
+import { put, del } from "@vercel/blob";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -43,12 +43,13 @@ export const updateProduct = async (
   let imagePath = product.image;
 
   if (data.image != null && data.image.size > 0) {
-    await fs.unlink(`public${product.image}`);
-    imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(
-      `public${imagePath}`,
-      Buffer.from(await data.image.arrayBuffer())
-    );
+    // Delete the old image from Vercel Blob
+    await del(`public${product.image}`);
+
+    // Upload the new image to Vercel Blob
+    const blob = await put(data.image.name, data.image, { access: "public" });
+
+    imagePath = blob.url;
   }
 
   await db.product.update({
@@ -66,6 +67,7 @@ export const updateProduct = async (
 
   redirect("/admin/products");
 };
+
 export const addProduct = async (prevState: unknown, formData: FormData) => {
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
   if (!result.success) {
@@ -74,19 +76,15 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
 
   const data = result.data;
 
-  await fs.mkdir("public/products", { recursive: true });
-  const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-  await fs.writeFile(
-    `public${imagePath}`,
-    Buffer.from(await data.image.arrayBuffer())
-  );
+  // Upload the image to Vercel Blob
+  const blob = await put(data.image.name, data.image, { access: "public" });
 
   await db.product.create({
     data: {
       name: data.name,
       description: data.description,
       priceInCents: data.priceInCents,
-      image: imagePath,
+      image: blob.url,
       weightInGrams: data.weight,
       category: data.category,
       isAvailabileForPurchase: true,
@@ -110,6 +108,6 @@ export const deleteProduct = async (id: string) => {
     return notFound();
   }
 
-  fs.unlink(product.image);
-  fs.unlink(`public${product.image}`);
+  // Delete the image from Vercel Blob
+  await del(`public${product.image}`);
 };
