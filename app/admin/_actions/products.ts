@@ -4,6 +4,16 @@ import db from "@/db/db";
 import { z } from "zod";
 import { notFound, redirect } from "next/navigation";
 import { put, del } from "@vercel/blob";
+import sharp from "sharp";
+
+const compressBlobImage = async (image: File) => {
+  const buffer = Buffer.from(await image.arrayBuffer());
+  const compressedBuffer = await sharp(buffer)
+    .resize({ width: 1920, height: 1920, fit: "inside" })
+    .jpeg({ quality: 80 })
+    .toBuffer();
+  return new File([compressedBuffer], image.name, { type: image.type });
+};
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -47,7 +57,10 @@ export const updateProduct = async (
     await del(`public${product.image}`);
 
     // Upload the new image to Vercel Blob
-    const blob = await put(data.image.name, data.image, { access: "public" });
+    const compressedImage = await compressBlobImage(data.image);
+    const blob = await put(compressedImage.name, compressedImage, {
+      access: "public",
+    });
 
     imagePath = blob.url;
   }
@@ -77,7 +90,10 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
   const data = result.data;
 
   // Upload the image to Vercel Blob
-  const blob = await put(data.image.name, data.image, { access: "public" });
+  const compressedImage = await compressBlobImage(data.image);
+  const blob = await put(compressedImage.name, compressedImage, {
+    access: "public",
+  });
 
   await db.product.create({
     data: {
