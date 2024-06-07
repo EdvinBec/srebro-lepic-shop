@@ -136,6 +136,9 @@ export const ProdcutsTable = async ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem asChild>
+                      <Link href={`/${product.id}`}>Pogledaj</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href={`/admin/products/${product.id}/edit`}>
                         Uredi
                       </Link>

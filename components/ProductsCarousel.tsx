@@ -31,7 +31,7 @@ const ProductsCarousel = ({ Products, category }: Props) => {
               key={itemIdx}
               className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center hover:opacity-85 hover:shadow-md transition-all duration-200"
             >
-              <Link href="/">
+              <Link href={item.id}>
                 <div className="bg-white p-5 rounded-[1px] shadow-sm ">
                   <Image
                     src={item.image}

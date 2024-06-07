@@ -14,7 +14,7 @@ const ProductsGallery = ({ products }: Props) => {
     <div className="mt-8 grid justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
       {products.map((item: Product) => (
         <Link
-          href="/"
+          href={`/${item.id}`}
           key={item.id}
           className="p-2 hover:shadow-sm transition-all duration-200 hover:opacity-85"
         >
