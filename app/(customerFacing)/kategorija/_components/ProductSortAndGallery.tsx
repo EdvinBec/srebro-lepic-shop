@@ -8,11 +8,10 @@ import PriceRangePicker from "./PriceRangePicker";
 import { Product } from "@prisma/client";
 
 type Props = {
-  slug: string;
   products: Product[];
 };
 
-const ProductSortAndGallery = ({ slug, products }: Props) => {
+const ProductSortAndGallery = ({ products }: Props) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [sortSystem, setSortSystem] = useState("random");
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);

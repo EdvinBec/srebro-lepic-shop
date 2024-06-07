@@ -45,7 +45,7 @@ const CategoryPage = async ({ params }: Props) => {
           {params.slug}
         </Heading>
       </div>
-      <ProductSortAndGallery products={products} slug={params.slug} />
+      <ProductSortAndGallery products={products} />
     </div>
   );
 };

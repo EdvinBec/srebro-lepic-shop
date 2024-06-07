@@ -10,6 +10,8 @@ import db from "@/db/db";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 type Props = {};
 
 // Function to get sales data
