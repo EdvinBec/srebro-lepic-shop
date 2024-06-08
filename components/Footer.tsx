@@ -48,7 +48,7 @@ const Footer = ({ className }: Props) => {
               className="rounded-none bg-accentYellow border-b-[1px] border-black py-1
                 placeholder:text-darkGray placeholder:text-sm focus:outline-none mt-7"
             />
-            <Button className="block" variant="secondary">
+            <Button className="block mt-4" variant="secondary">
               Prijavi se
             </Button>
           </div>

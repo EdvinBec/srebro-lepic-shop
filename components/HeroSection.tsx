@@ -15,7 +15,7 @@ const HeroSection = () => {
             Zaustavite potragu - ovdje ste pronašli sve što tražite. Želite li
             nešto više od običnog nakita? Mi smo upravo ono što tražite.
           </p>
-          <Button>
+          <Button className="mt-5 md:mt-8">
             <Link href="/kategorija/ponuda">Pogledajte našu ponudu</Link>
           </Button>
         </div>

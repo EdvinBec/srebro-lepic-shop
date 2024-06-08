@@ -27,6 +27,7 @@ const addSchema = z.object({
   image: imageSchema.refine((file) => file.size > 0, "Required"),
   category: z.string().min(1),
   weight: z.coerce.number().min(1),
+  sizes: z.string().min(1),
 });
 
 const editSchema = addSchema.extend({
@@ -45,6 +46,7 @@ export const updateProduct = async (
 
   const data = result.data;
   const product = await db.product.findUnique({ where: { id } });
+  const sizes = data.sizes.split(",").map((size) => Number(size)) || [0];
 
   if (product == null) {
     return notFound();
@@ -74,7 +76,7 @@ export const updateProduct = async (
       image: imagePath,
       weightInGrams: data.weight,
       category: data.category,
-      availableSizes: "all",
+      availableSizes: sizes,
     },
   });
 
@@ -88,6 +90,7 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  const sizes = data.sizes.split(",").map((size) => Number(size)) || [0];
 
   // Upload the image to Vercel Blob
   const compressedImage = await compressBlobImage(data.image);
@@ -104,7 +107,7 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
       weightInGrams: data.weight,
       category: data.category,
       isAvailabileForPurchase: true,
-      availableSizes: "all",
+      availableSizes: sizes,
     },
   });
 

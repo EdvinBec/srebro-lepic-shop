@@ -31,7 +31,7 @@ const Article = ({
             {heading}
           </h2>
           {children}
-          <Button className="w-full" variant="secondary">
+          <Button className="w-full mt-5 md:mt-8" variant="secondary">
             <Link href={href}>{buttonLabel}</Link>
           </Button>
         </div>
@@ -45,7 +45,7 @@ const Article = ({
             {heading}
           </h2>
           {children}
-          <Button className="w-full" variant="secondary">
+          <Button className="w-full mt-5 md:mt-8" variant="secondary">
             <Link href={href}>{buttonLabel}</Link>
           </Button>
         </div>

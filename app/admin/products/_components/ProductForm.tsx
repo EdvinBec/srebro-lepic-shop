@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import { addProduct, updateProduct } from "../../_actions/products";
-import DropdownButtonShadcn from "@/components/Button/DropdownButtonShadcn";
-import { Circle } from "lucide-react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Product } from "@prisma/client";
 import Image from "next/image";
+import { FancyMultiSelect, OPTION } from "@/components/ui/multi-select";
+import { RingSizePicker } from "../../_components/RingSizePicker";
+import { NecklaceSizePicker } from "../../_components/NecklaceSizePicker";
 
 type Props = {
   className?: string;
@@ -24,13 +25,18 @@ const ProductForm = ({ className, product }: Props) => {
     !product ? addProduct : updateProduct.bind(null, product!.id),
     {}
   );
-
+  const [selectedSize, setSelectedSize] = useState<number[]>();
+  const [category, setCategory] = useState(product?.category || "prstenje");
   const [priceInCents, setPriceInCents] = useState<number | undefined>(
     product?.priceInCents
   );
   const [weight, setWeight] = useState<number | undefined>(
     product?.weightInGrams
   );
+
+  const setSize = (size: number[]) => {
+    setSelectedSize(size);
+  };
 
   return (
     <form action={action} className={cn(className, "space-y-8")}>
@@ -81,6 +87,7 @@ const ProductForm = ({ className, product }: Props) => {
           id="catefory"
           className="block border-[1px] px-4 py-2"
           defaultValue={product?.category}
+          onChange={(e) => setCategory(e.target.value)}
         >
           <option value="prstenje">Prstenje</option>
           <option value="ogrlice">Ogrlice</option>
@@ -103,6 +110,21 @@ const ProductForm = ({ className, product }: Props) => {
         />
         <div className="text-muted-foreground">{formatWeight(weight || 0)}</div>
         {error.weight && <div className="text-destructive">{error.weight}</div>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="sizes">Dostupne veličine</Label>
+        <div className={category === "prstenje" ? "block" : "hidden"}>
+          <RingSizePicker save={setSize} prevSizes={product?.availableSizes!} />
+        </div>
+        <div className={category === "ogrlice" ? "block" : "hidden"}>
+          <NecklaceSizePicker
+            save={setSize}
+            prevSizes={product?.availableSizes!}
+          />
+        </div>
+
+        <input type="hidden" name="sizes" value={selectedSize?.join(",")} />
+        {error.sizes && <div className="text-destructive">{error.sizes}</div>}
       </div>
 
       <div className="space-y-2">
