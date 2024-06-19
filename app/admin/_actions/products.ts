@@ -30,11 +30,12 @@ const editSchema = addSchema.extend({
 
 // Function to upload file to MinIO
 const uploadFileToMinio = async (bucket: string, file: File) => {
-  const sourceFile = await file.arrayBuffer();
-  const buffer = Buffer.from(sourceFile);
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
   const objectName = file.name;
 
   const stream = new Readable();
+  stream._read = () => {}; // Implement _read method as no-op
   stream.push(buffer);
   stream.push(null);
 
@@ -75,10 +76,7 @@ export const updateProduct = async (
   let imagePath = product.image;
 
   if (data.image && data.image.size > 0) {
-    await minioClient.removeObject(
-      process.env.MINIO_IMAGE_BUCKET!,
-      objectName!
-    );
+    await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
     imagePath = await uploadFileToMinio(
       process.env.MINIO_IMAGE_BUCKET!,
       data.image
@@ -148,7 +146,7 @@ export const deleteProduct = async (id: string) => {
   }
 
   const objectName = getObjectNameFromUrl(product.image);
-  await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName!);
+  await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
 
   redirect("/admin/products");
 };
