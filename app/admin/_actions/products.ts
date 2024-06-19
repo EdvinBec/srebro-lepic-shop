@@ -3,18 +3,8 @@
 import db from "@/db/db";
 import { z } from "zod";
 import { notFound, redirect } from "next/navigation";
-import sharp from "sharp";
 import minioClient from "@/lib/minioClient";
 import { Readable } from "stream";
-
-const compressBlobImage = async (image: File) => {
-  const buffer = Buffer.from(await image.arrayBuffer());
-  const compressedBuffer = await sharp(buffer)
-    .resize({ width: 1920, height: 1920, fit: "inside" })
-    .jpeg({ quality: 80 })
-    .toBuffer();
-  return new File([compressedBuffer], image.name, { type: image.type });
-};
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -64,9 +54,8 @@ export const updateProduct = async (
     // Delete the old image from Minio Bucket
     await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
 
-    const image = await compressBlobImage(data.image);
     const bucket = process.env.MINIO_IMAGE_BUCKET!;
-    const sourceFile = await image.arrayBuffer();
+    const sourceFile = await data.image.arrayBuffer();
     const buffer = Buffer.from(sourceFile);
     const objectNewName = data.image.name;
     const fileSize = data.image.size;
@@ -116,11 +105,10 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
-  const image = await compressBlobImage(data.image);
   const sizes = data.sizes.split(",").map((size) => Number(size)) || [0];
 
   const bucket = process.env.MINIO_IMAGE_BUCKET!;
-  const sourceFile = await image.arrayBuffer();
+  const sourceFile = await data.image.arrayBuffer();
   const buffer = Buffer.from(sourceFile);
   const objectName = data.image.name;
   const fileSize = data.image.size;
