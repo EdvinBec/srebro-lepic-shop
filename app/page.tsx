@@ -13,17 +13,13 @@ import ShowRow from "@/components/ShowRow";
 import db from "@/db/db";
 
 export default async function Home() {
-  const products = await db.product.findMany({
-    where: { isAvailabileForPurchase: true },
-  });
-
   return (
     <div className="">
       <HeroSection />
       <MaxWidthWrapper>
         <section>
           <Heading className="mt-10 md:mt-16">Naše preporuke</Heading>
-          <ProductsCarousel Products={products} />
+          <ProductsCarousel />
         </section>
         <Article
           heading="PERSONALIZOVANI POKLONI"
@@ -54,13 +50,13 @@ export default async function Home() {
             <Heading side="left" className="mt-10 md:mt-16">
               Prstenje
             </Heading>
-            <ProductsCarousel Products={products} category="prstenje" />
+            <ProductsCarousel category="prstenje" />
           </div>
           <div>
             <Heading side="left" className="mt-10 md:mt-16">
               Ogrlice
             </Heading>
-            <ProductsCarousel Products={products} category="ogrlice" />
+            <ProductsCarousel category="ogrlice" />
           </div>
         </section>
       </MaxWidthWrapper>

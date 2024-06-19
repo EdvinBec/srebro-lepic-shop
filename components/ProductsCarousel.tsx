@@ -11,13 +11,17 @@ import Logo from "@/public/assets/logo.svg";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/formatters";
 import { Product } from "@prisma/client";
+import db from "@/db/db";
 
 type Props = {
-  Products: Product[];
   category?: string;
 };
 
-const ProductsCarousel = ({ Products, category }: Props) => {
+const ProductsCarousel = async ({ category }: Props) => {
+  const Products = await db.product.findMany({
+    where: { isAvailabileForPurchase: true },
+  });
+
   const filteredProducts =
     (category &&
       Products.filter((item: Product) => item.category === category)) ||
