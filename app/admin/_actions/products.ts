@@ -18,7 +18,7 @@ const addSchema = z.object({
   image: imageSchema.refine((file) => file.size > 0, "Required"),
   category: z.string().min(1),
   weight: z.coerce.number().min(1),
-  sizes: z.string().min(1),
+  sizes: z.string(),
 });
 
 const editSchema = addSchema.extend({
