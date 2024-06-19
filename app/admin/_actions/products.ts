@@ -3,8 +3,9 @@
 import db from "@/db/db";
 import { z } from "zod";
 import { notFound, redirect } from "next/navigation";
-import { put, del } from "@vercel/blob";
 import sharp from "sharp";
+import minioClient from "@/lib/minioClient";
+import { Readable } from "stream";
 
 const compressBlobImage = async (image: File) => {
   const buffer = Buffer.from(await image.arrayBuffer());
@@ -52,19 +53,44 @@ export const updateProduct = async (
     return notFound();
   }
 
+  const segments = product.image.split("/");
+  const objectFullName = segments[4];
+  const index = objectFullName.indexOf("?");
+  const objectName = objectFullName.substring(0, index);
+
   let imagePath = product.image;
 
   if (data.image != null && data.image.size > 0) {
-    // Delete the old image from Vercel Blob
-    await del(`public${product.image}`);
+    // Delete the old image from Minio Bucket
+    await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
 
-    // Upload the new image to Vercel Blob
-    const compressedImage = await compressBlobImage(data.image);
-    const blob = await put(compressedImage.name, compressedImage, {
-      access: "public",
-    });
+    const image = await compressBlobImage(data.image);
+    const bucket = process.env.MINIO_IMAGE_BUCKET!;
+    const sourceFile = await image.arrayBuffer();
+    const buffer = Buffer.from(sourceFile);
+    const objectNewName = data.image.name;
+    const fileSize = data.image.size;
 
-    imagePath = blob.url;
+    const stream = new Readable();
+    stream.push(buffer);
+    stream.push(null);
+
+    const exists = await minioClient.bucketExists(bucket);
+    if (exists) {
+      console.log("Bucket " + bucket + " exists.");
+    } else {
+      await minioClient.makeBucket(bucket, "us-east-1");
+      console.log("Bucket " + bucket + ' created in "us-east-1".');
+    }
+
+    await minioClient.putObject(bucket, objectNewName, stream, fileSize);
+    const imageUrl = await minioClient.presignedUrl(
+      "GET",
+      bucket,
+      objectNewName
+    );
+
+    imagePath = imageUrl;
   }
 
   await db.product.update({
@@ -90,20 +116,45 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  const image = await compressBlobImage(data.image);
   const sizes = data.sizes.split(",").map((size) => Number(size)) || [0];
 
-  // Upload the image to Vercel Blob
-  const compressedImage = await compressBlobImage(data.image);
-  const blob = await put(compressedImage.name, compressedImage, {
-    access: "public",
-  });
+  const bucket = process.env.MINIO_IMAGE_BUCKET!;
+  const sourceFile = await image.arrayBuffer();
+  const buffer = Buffer.from(sourceFile);
+  const objectName = data.image.name;
+  const fileSize = data.image.size;
+
+  const stream = new Readable();
+  stream.push(buffer);
+  stream.push(null);
+
+  const exists = await minioClient.bucketExists(bucket);
+  if (exists) {
+    console.log("Bucket " + bucket + " exists.");
+  } else {
+    await minioClient.makeBucket(bucket, "us-east-1");
+    console.log("Bucket " + bucket + ' created in "us-east-1".');
+  }
+
+  await minioClient.putObject(bucket, objectName, stream, fileSize);
+  const imageUrl = await minioClient.presignedUrl("GET", bucket, objectName);
+
+  console.log(
+    "File " +
+      sourceFile +
+      " uploaded as object " +
+      objectName +
+      " in bucket " +
+      bucket
+  );
 
   await db.product.create({
     data: {
       name: data.name,
       description: data.description,
       priceInCents: data.priceInCents,
-      image: blob.url,
+      image: imageUrl,
       weightInGrams: data.weight,
       category: data.category,
       isAvailabileForPurchase: true,
@@ -127,6 +178,13 @@ export const deleteProduct = async (id: string) => {
     return notFound();
   }
 
-  // Delete the image from Vercel Blob
-  await del(`public${product.image}`);
+  const segments = product.image.split("/");
+  const objectFullName = segments[4];
+  const index = objectFullName.indexOf("?");
+  const objectName = objectFullName.substring(0, index);
+
+  // Delete the image from Minio Bucket
+  await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
+
+  redirect("/admin/products");
 };
