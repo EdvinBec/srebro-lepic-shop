@@ -25,6 +25,8 @@ import { CreditCard, Truck } from "lucide-react";
 import Image from "next/image";
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/lib/store";
+import { useSelector } from "react-redux";
 
 type Props = {
   product: Product;
@@ -123,7 +125,6 @@ const PaymentForm = ({ price }: { price: number }) => {
     if (stripe == null || elements == null || email == null) {
       return;
     }
-
     setIsLoading(true);
 
     stripe
@@ -133,7 +134,7 @@ const PaymentForm = ({ price }: { price: number }) => {
           return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/stripe/purchase-success`,
         },
       })
-      .then(({ error }) => {
+      .then(({ error }: { error: any }) => {
         if (error.type === "card_error") {
           setErrorMessage(error.message!);
         } else {
@@ -193,6 +194,7 @@ const DeliveryForm = ({
   productId: string;
 }) => {
   const router = useRouter();
+  const size = useSelector((state: RootState) => state.order.size);
 
   const [data, setData] = useState<DeliveryFormData>();
   const [email, setEmail] = useState<string>("");
@@ -220,6 +222,7 @@ const DeliveryForm = ({
         productId: productId,
         pricePaidInCents: pricePaidInCents,
         zip: data!.address.postal_code,
+        size: size,
       }),
     });
 

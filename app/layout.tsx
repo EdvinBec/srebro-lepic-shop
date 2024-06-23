@@ -5,6 +5,7 @@ import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import AttentionRow from "@/components/AttentionRow";
 import localFont from "@next/font/local";
 import Footer from "@/components/Footer";
+import StoreProvider from "@/components/provider/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,10 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${Boska.variable} font-boska`}>
       <body className={inter.className}>
-        <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
-        <NavigationBar />
-        {children}
-        <Footer className="mt-12" />
+        <StoreProvider>
+          <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
+          <NavigationBar />
+          {children}
+          <Footer className="mt-12" />
+        </StoreProvider>
       </body>
     </html>
   );

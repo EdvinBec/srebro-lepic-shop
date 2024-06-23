@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -19,6 +21,7 @@ export async function POST(req: NextRequest) {
       fullName,
       productId,
       pricePaidInCents,
+      size,
     } = await req.json();
 
     if (
@@ -40,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     const userFields = {
       email,
-      order: { create: { productId, pricePaidInCents, size: 2 } },
+      order: { create: { productId, pricePaidInCents, size: size } },
       zip: zip,
       address: address,
       phone: phone,

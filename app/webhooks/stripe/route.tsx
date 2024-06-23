@@ -2,6 +2,8 @@ import db from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export const resend = new Resend("re_Qg6PeTUE_8xEro5FzSr9C74D2q3NDgYiy");
@@ -31,7 +33,13 @@ export const POST = async (req: NextRequest) => {
 
     const userFields = {
       email,
-      order: { create: { productId, pricePaidInCents, size: 2 } },
+      order: {
+        create: {
+          productId,
+          pricePaidInCents,
+          size: Number(charge.metadata.size),
+        },
+      },
       zip: charge.billing_details.address!.postal_code!,
       address: charge.billing_details.address!.line1!,
       phone: charge.billing_details.phone!,

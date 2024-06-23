@@ -11,10 +11,14 @@ type Props = {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-const page = async ({ params: { slug } }: Props) => {
+const Page = async ({ params: { slug } }: Props) => {
+  const quantityIndex = slug.indexOf("quantity");
+  const size = Number(slug.slice(quantityIndex + 8, slug.length));
+  const id = slug.slice(0, quantityIndex);
+
   const product = await db.product.findUnique({
     where: {
-      id: slug,
+      id: id,
     },
   });
 
@@ -22,7 +26,7 @@ const page = async ({ params: { slug } }: Props) => {
     amount: product?.priceInCents! * 100,
     currency: "eur", // Use lowercase for currency codes
     payment_method_types: ["card"], // Specify the payment method type(s) you want to accept
-    metadata: { productId: product?.id! },
+    metadata: { productId: product?.id!, size: size },
   });
 
   if (paymentIntent.client_secret === null) {
@@ -38,4 +42,4 @@ const page = async ({ params: { slug } }: Props) => {
   );
 };
 
-export default page;
+export default Page;
