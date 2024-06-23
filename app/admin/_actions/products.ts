@@ -5,6 +5,7 @@ import { z } from "zod";
 import { notFound, redirect } from "next/navigation";
 import minioClient from "@/lib/minioClient";
 import { Readable } from "stream";
+import { revalidatePath } from "next/cache";
 
 // Define schemas using zod
 const addSchema = z.object({
@@ -93,6 +94,8 @@ export const updateProduct = async (
     },
   });
 
+  revalidatePath(`/products`);
+  revalidatePath("/");
   redirect("/admin/products");
 };
 
@@ -124,6 +127,8 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
     },
   });
 
+  revalidatePath(`/products`);
+  revalidatePath("/");
   redirect("/admin/products");
 };
 
@@ -133,6 +138,9 @@ export const toggleProductAvailability = async (
   isAvailabileForPurchase: boolean
 ) => {
   await db.product.update({ where: { id }, data: { isAvailabileForPurchase } });
+
+  revalidatePath(`/products`);
+  revalidatePath("/");
 };
 
 // Function to delete a product
@@ -145,5 +153,7 @@ export const deleteProduct = async (id: string) => {
   const objectName = getObjectNameFromUrl(product.image);
   await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName!);
 
+  revalidatePath(`/products`);
+  revalidatePath("/");
   redirect("/admin/products");
 };

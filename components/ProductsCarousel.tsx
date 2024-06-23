@@ -12,12 +12,14 @@ import Link from "next/link";
 import { formatCurrency } from "@/lib/formatters";
 import { Product } from "@prisma/client";
 import db from "@/db/db";
+import { cn } from "@/lib/utils";
 
 type Props = {
   category?: string;
+  className?: string;
 };
 
-const ProductsCarousel = async ({ category }: Props) => {
+const ProductsCarousel = async ({ category, className }: Props) => {
   const Products = await db.product.findMany({
     where: { isAvailabileForPurchase: true },
   });
@@ -27,7 +29,9 @@ const ProductsCarousel = async ({ category }: Props) => {
       Products.filter((item: Product) => item.category === category)) ||
     Products;
   return (
-    <Carousel className="w-full max-w-[90%] mx-auto mt-8 md:mt-8 text-darkGray">
+    <Carousel
+      className={cn("w-full max-w-[90%] mx-auto mt-4 text-darkGray", className)}
+    >
       <CarouselContent>
         {filteredProducts.map((item: Product, itemIdx: number) => {
           return (

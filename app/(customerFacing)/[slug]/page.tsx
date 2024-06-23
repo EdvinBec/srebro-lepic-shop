@@ -7,8 +7,6 @@ import React from "react";
 import Logo from "@/public/assets/logo.svg";
 import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { Label } from "@/components/ui/label";
-import DropdownButtonShadcn from "@/components/Button/DropdownButtonShadcn";
-import SizePicker from "./_components/SizePicker";
 import AddToCart from "./_components/AddToCart";
 import { Truck } from "lucide-react";
 
@@ -17,8 +15,6 @@ type Props = {
     slug: string;
   };
 };
-
-const availableSizes = [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12];
 
 const page = async ({ params: { slug } }: Props) => {
   const product: Product | null = await db.product.findUnique({
@@ -29,9 +25,9 @@ const page = async ({ params: { slug } }: Props) => {
 
   return (
     <MaxWidthWrapper className=" text-darkGray py-8">
-      <div className="flex gap-10">
+      <div className="flex flex-col md:flex-row gap-10">
         <div className="flex gap-5">
-          <div className="flex flex-col gap-4">
+          <div className="xl:flex flex-col gap-4 hidden ">
             <Image
               alt={product?.name!}
               src={product?.image!}
@@ -56,9 +52,10 @@ const page = async ({ params: { slug } }: Props) => {
             src={product?.image!}
             width={600}
             height={500}
+            className="max-h-[500px]"
           />
         </div>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between w-full md:max-w-96">
           <div>
             <Image src={Logo} alt="Logo" />
             <h2 className="mt-2 font-semibold text-2xl">{product?.name}</h2>
@@ -75,6 +72,7 @@ const page = async ({ params: { slug } }: Props) => {
 
           <div className="flex flex-col gap-4">
             <AddToCart
+              id={slug!}
               className="mt-12"
               availableSizes={product?.availableSizes!}
               product={product!}

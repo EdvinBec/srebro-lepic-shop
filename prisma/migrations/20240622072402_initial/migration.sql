@@ -7,7 +7,7 @@ CREATE TABLE "Product" (
     "description" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "weightInGrams" DOUBLE PRECISION NOT NULL,
-    "availableSizes" TEXT NOT NULL,
+    "availableSizes" DOUBLE PRECISION[],
     "isAvailabileForPurchase" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -19,6 +19,13 @@ CREATE TABLE "Product" (
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "zip" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
