@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import OrderSlice from "./slices/createOrder";
+import CartSlice from "./slices/cartSlice";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { order: OrderSlice },
+    reducer: { order: OrderSlice, cart: CartSlice },
   });
 };
 

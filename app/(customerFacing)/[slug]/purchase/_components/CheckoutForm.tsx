@@ -22,34 +22,52 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { CreditCard, Truck } from "lucide-react";
-import Image from "next/image";
-import React, { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { RootState } from "@/lib/store";
-import { useSelector } from "react-redux";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
+import { CartContext } from "@/lib/CartContext";
 
 type Props = {
-  product: Product;
-  clientSecret: string;
-};
-
-type DeliveryFormData = {
-  name: string;
-  phone: string;
-  address: {
-    line1: string;
-    city: string;
-    country: string;
-    postal_code: string;
-  };
+  products: Product[];
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!, {
   locale: "hr",
 });
 
-const CheckoutForm = ({ product, clientSecret }: Props) => {
-  const [paymentMethod, setPaymentMethod] = useState("delivery");
+const CheckoutForm = ({ products }: Props) => {
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [clientSecret, setClientSecret] = useState<string>();
+  const cart = useContext(CartContext);
+
+  useEffect(() => {
+    // Fetch the client secret for the Payment Intent
+    async function fetchClientSecret() {
+      try {
+        const response = await fetch("/api/checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cart: cart.items,
+            totalPrice: cart.getTotalCost(products),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setClientSecret(data.clientSecret);
+      } catch (error) {
+        console.error("Error fetching client secret:", error);
+      }
+    }
+
+    if (cart.items.length > 0) {
+      fetchClientSecret();
+    }
+  }, [cart, products]);
 
   return (
     <>
@@ -77,41 +95,21 @@ const CheckoutForm = ({ product, clientSecret }: Props) => {
           <Label>Plaćanje pouzećem</Label>
         </div>
       </div>
-      <div className="flex gap-4 items-center mt-4 mb-4">
-        <Image
-          className="border-[1px] p-1 w-[120px] md:w-[200px]"
-          src={product.image}
-          width={200}
-          height={100}
-          alt={product.name}
-        />
-        <div>
-          <div className="text-sm md:text-lg flex flex-col justify-between h-full">
-            <div>
-              <h1 className="font-bold">{product.name}</h1>
-              <p className="text-muted-foreground line-clamp-3 text-sm">
-                {product.description}
-              </p>
-            </div>
-            {formatCurrency(product.priceInCents)}
-          </div>
-        </div>
-      </div>
-      <Elements options={{ clientSecret }} stripe={stripePromise}>
-        {paymentMethod === "card" && (
-          <PaymentForm price={product.priceInCents} />
-        )}
-        {paymentMethod === "delivery" && (
-          <DeliveryForm price={product.priceInCents} productId={product.id} />
-        )}
-      </Elements>
+
+      {clientSecret && (
+        <Elements options={{ clientSecret }} stripe={stripePromise}>
+          {paymentMethod === "card" && (
+            <PaymentForm price={cart.getTotalCost(products)} />
+          )}
+        </Elements>
+      )}
     </>
   );
 };
 
 export default CheckoutForm;
 
-const PaymentForm = ({ price }: { price: number }) => {
+export const PaymentForm = ({ price }: { price: number }) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -178,101 +176,6 @@ const PaymentForm = ({ price }: { price: number }) => {
             variant="secondary"
             className="w-full"
           >
-            {isLoading ? "Naručujem..." : `Naruči - ${formatCurrency(price)}`}
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
-  );
-};
-
-const DeliveryForm = ({
-  price,
-  productId,
-}: {
-  price: number;
-  productId: string;
-}) => {
-  const router = useRouter();
-  const size = useSelector((state: RootState) => state.order.size);
-
-  const [data, setData] = useState<DeliveryFormData>();
-  const [email, setEmail] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleOrderSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const pricePaidInCents = price * 100;
-
-    const response = await fetch("/api/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        address: data!.address.line1,
-        phone: data!.phone,
-        country: data!.address.country,
-        city: data!.address.city,
-        fullName: data!.name,
-        productId: productId,
-        pricePaidInCents: pricePaidInCents,
-        zip: data!.address.postal_code,
-        size: size,
-      }),
-    });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      setError(responseData.error || "Unknown error occurred");
-    } else {
-      console.log("Order submitted successfully");
-      router.push(`/success/${productId}`);
-    }
-
-    setIsLoading(false);
-  };
-
-  return (
-    <form onSubmit={handleOrderSubmit}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Blagajna</CardTitle>
-          {error && (
-            <CardDescription className="text-destructive">
-              {error}
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <AddressElement
-            onChange={(e) => setData(e.value as DeliveryFormData)}
-            options={{
-              mode: "shipping",
-              validation: {
-                phone: {
-                  required: "always",
-                },
-              },
-              fields: { phone: "always" },
-            }}
-          />
-          <LinkAuthenticationElement
-            onChange={(e) => setEmail(e.value.email)}
-          />
-        </CardContent>
-        <CardFooter className="flex flex-col items-start gap-2">
-          {error && (
-            <CardDescription className="text-destructive">
-              {error}
-            </CardDescription>
-          )}
-          <Button variant="secondary" className="w-full">
             {isLoading ? "Naručujem..." : `Naruči - ${formatCurrency(price)}`}
           </Button>
         </CardFooter>

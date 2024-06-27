@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MaxWidthWrapper from "../MaxWidthWrapper";
 import Logo from "@/public/assets/logo.svg";
 import HamburgerMenu from "@/public/assets/Hamburger.svg";
@@ -9,6 +9,9 @@ import Link from "next/link";
 import CartButton from "../Button/CartButton";
 import { NavLink } from "@/types";
 import DropdownButton from "../Button/DropdownButton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
+import { CartContext } from "@/lib/CartContext";
 
 type Props = {};
 
@@ -43,6 +46,10 @@ const DropdownLinks: NavLink[] = [
 ];
 
 const NavigationBar = (props: Props) => {
+  const cart = useContext(CartContext);
+
+  const productsCount = cart.items.length;
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -83,7 +90,7 @@ const NavigationBar = (props: Props) => {
           >
             <Image src={HamburgerMenu} alt="hamburger" />
           </button>
-          <CartButton itemsCount={3} />
+          <CartButton itemsCount={productsCount} />
         </div>
       </nav>
       <div className="px-4 md:hidden mb-4">

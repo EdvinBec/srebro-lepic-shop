@@ -20,7 +20,7 @@ model Product {
   isAvailabileForPurchase Boolean
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
-  orders                  Order[]
+  orderItems              OrderItem[]
 }
 
 model User {
@@ -34,18 +34,25 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fullName  String
-  order     Order[]
+  orders    Order[]
 }
 
 model Order {
   id               String   @id @default(uuid())
-  pricePaidInCents Int
-  isSent           Boolean @default(false)
+  isSent           Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   userId           String
-  productId        String
-  size             Float
-  product          Product  @relation(fields: [productId], references: [id])
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products         OrderItem[]
+  user             User     @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  productId String
+  orderId   String
+  size      Float
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }

@@ -6,6 +6,8 @@ import AttentionRow from "@/components/AttentionRow";
 import localFont from "@next/font/local";
 import Footer from "@/components/Footer";
 import StoreProvider from "@/components/provider/StoreProvider";
+import { Toaster } from "@/components/ui/toaster";
+import CartProvider from "@/lib/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,12 +46,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${Boska.variable} font-boska`}>
       <body className={inter.className}>
-        <StoreProvider>
-          <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
-          <NavigationBar />
-          {children}
-          <Footer className="mt-12" />
-        </StoreProvider>
+        <CartProvider>
+          <StoreProvider>
+            <AttentionRow label="Besplatna dostava na narudžbe iznad 49,00KM" />
+            <NavigationBar />
+            {children}
+            <Toaster />
+            <Footer className="mt-12" />
+          </StoreProvider>
+        </CartProvider>
       </body>
     </html>
   );

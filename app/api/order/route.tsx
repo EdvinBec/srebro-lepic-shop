@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
+import { v4 as uuidv4 } from "uuid";
+import db from "@/db/db";
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -52,14 +52,44 @@ export async function POST(req: NextRequest) {
       fullName: fullName,
     };
 
-    const user = await prisma.user.upsert({
-      where: { email },
-      create: userFields,
-      update: userFields,
-      select: { order: { orderBy: { createdAt: "desc" }, take: 1 } },
+    let user = await db.user.findUnique({
+      where: {
+        email: email,
+      },
     });
 
-    const order = user.order[0];
+    if (!user) {
+      // Create a new user
+      user = await db.user.create({
+        data: {
+          id: uuidv4(),
+          email,
+          zip: zip,
+          address: address,
+          phone: phone,
+          country: country,
+          city: city,
+          fullName: fullName,
+        },
+      });
+    }
+
+    const order = await db.order.create({
+      data: {
+        userId: user.id,
+        products: {
+          create: {
+            productId,
+            size: Number(size),
+            quantity: 1,
+          },
+        },
+      },
+      include: {
+        products: true, // Include related OrderItems
+      },
+    });
+
     console.log("Order created or updated successfully:", order);
 
     await resend.emails.send({
