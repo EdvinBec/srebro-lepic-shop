@@ -9,16 +9,17 @@ export type CartItem = {
   id: string;
   quantity: number;
   size: number;
+  price: number;
 };
 
 // Define CartContextType
 type CartContextType = {
   items: CartItem[];
   getProductQuantity: (id: string, size: number) => number;
-  addOneToCart: (id: string, size: number) => void;
+  addOneToCart: (id: string, size: number, price: number) => void;
   removeOneFromCart: (id: string, size: number) => void;
   deleteFromCart: (id: string, size: number) => void;
-  getTotalCost: (product: Product[]) => number;
+  getTotalCost: () => number;
 };
 
 export const CartContext = createContext<CartContextType>({
@@ -50,7 +51,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     return quantity || 0;
   };
 
-  const addOneToCart = (id: string, size: number) => {
+  const addOneToCart = (id: string, size: number, price: number) => {
     const existingItem = cartProducts.find(
       (item) => item.id === id && item.size === size
     );
@@ -63,7 +64,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       );
       setCartProducts(updatedCart);
     } else {
-      setCartProducts([...cartProducts, { id, size, quantity: 1 }]);
+      setCartProducts([...cartProducts, { id, size, quantity: 1, price }]);
     }
   };
 
@@ -93,12 +94,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCartProducts(updatedCart);
   };
 
-  const getTotalCost = (products: Product[]) => {
-    const filteredProducts = [];
+  const getTotalCost = () => {
     let totalPrice = 0;
     cartProducts.forEach((item) => {
-      const product = products.find((product) => product.id === item.id);
-      totalPrice += product!.priceInCents * item.quantity;
+      totalPrice += item.price * item.quantity;
     });
 
     return totalPrice;

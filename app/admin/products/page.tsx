@@ -73,7 +73,7 @@ export const ProdcutsTable = async ({
       isAvailabileForPurchase: true,
       _count: {
         select: {
-          orders: true,
+          orderItems: true,
         },
       },
     },
@@ -127,7 +127,7 @@ export const ProdcutsTable = async ({
               </TableCell>
               <TableCell>{product.name}</TableCell>
               <TableCell>{formatCurrency(product.priceInCents)}</TableCell>
-              <TableCell>{formatNumber(product._count.orders)}</TableCell>
+              <TableCell>{formatNumber(product._count.orderItems)}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -150,7 +150,7 @@ export const ProdcutsTable = async ({
                     <DropdownMenuSeparator />
                     <DeleteDropdownItem
                       id={product.id}
-                      disabled={product._count.orders > 0}
+                      disabled={product._count.orderItems > 0}
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>

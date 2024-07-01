@@ -18,13 +18,13 @@ type Props = {};
 const getSalesData = async () => {
   const data = await db.order.aggregate({
     _sum: {
-      pricePaidInCents: true,
+      price: true,
     },
     _count: true,
   });
 
   return {
-    amount: (data._sum.pricePaidInCents || 0) / 100,
+    amount: (data._sum.price || 0) / 100,
     numberOfSales: data._count,
   };
 };
@@ -35,7 +35,7 @@ const getUserData = async () => {
     db.user.count(),
     db.order.aggregate({
       _sum: {
-        pricePaidInCents: true,
+        price: true,
       },
     }),
   ]);
@@ -43,9 +43,7 @@ const getUserData = async () => {
   return {
     userCount,
     averageValuePerUser:
-      userCount === 0
-        ? 0
-        : (orderData._sum.pricePaidInCents || 0) / userCount / 100,
+      userCount === 0 ? 0 : (orderData._sum.price || 0) / userCount / 100,
   };
 };
 

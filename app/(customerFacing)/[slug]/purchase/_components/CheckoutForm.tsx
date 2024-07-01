@@ -49,7 +49,7 @@ const CheckoutForm = ({ products }: Props) => {
           },
           body: JSON.stringify({
             cart: cart.items,
-            totalPrice: cart.getTotalCost(products),
+            totalPrice: cart.getTotalCost(),
           }),
         });
 
@@ -99,7 +99,7 @@ const CheckoutForm = ({ products }: Props) => {
       {clientSecret && (
         <Elements options={{ clientSecret }} stripe={stripePromise}>
           {paymentMethod === "card" && (
-            <PaymentForm price={cart.getTotalCost(products)} />
+            <PaymentForm price={cart.getTotalCost()} />
           )}
         </Elements>
       )}

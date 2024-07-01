@@ -47,7 +47,7 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
       return;
     }
 
-    cart.addOneToCart(product.id, size);
+    cart.addOneToCart(product.id, size, product.priceInCents);
 
     toast({
       title: "Proizvod dodan u korpu",
@@ -95,7 +95,9 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
                   {productQuantity}
                 </div>
                 <button
-                  onClick={() => cart.addOneToCart(product.id, size)}
+                  onClick={() =>
+                    cart.addOneToCart(product.id, size, product.priceInCents)
+                  }
                   className="border-[1px] px-3 w-10 h-10 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all ease-out duration-100"
                 >
                   <Plus size={15} />
