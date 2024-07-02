@@ -1,16 +1,16 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { RootState } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Product } from "@prisma/client";
-import React, { useContext } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext, useState } from "react";
 import { formatCurrency } from "@/lib/formatters";
 import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import { CartContext, CartItem } from "@/lib/CartContext";
 import { createCheckoutSession } from "@/hooks/useCart";
+import { CreditCard, Truck } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   products: Product[];
@@ -19,6 +19,10 @@ type Props = {
 
 const Checkout = ({ products, className }: Props) => {
   const cart = useContext(CartContext);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "delivery">();
 
   return (
     <div className={cn(className, "px-4 md:px-8 py-8 border-[1px]")}>
@@ -43,10 +47,45 @@ const Checkout = ({ products, className }: Props) => {
             : formatCurrency(cart.getTotalCost() + 5)}
         </span>
       </div>
+      <div className="flex flex-col gap-2 mt-4">
+        <Label className="mb-1">Izaberite način plaćanja</Label>
+        <button
+          onClick={() => setPaymentMethod("card")}
+          className={`w-full py-2 flex gap-2 items-center justify-center border-[1px] text-sm rounded-sm ${
+            paymentMethod === "card" && "outline outline-[2px]"
+          }`}
+        >
+          <CreditCard strokeWidth={1.5} size={20} />
+          Kartica
+        </button>
+        <button
+          onClick={() => setPaymentMethod("delivery")}
+          className={`w-full py-2 flex gap-2 items-center justify-center border-[1px] text-sm rounded-sm ${
+            paymentMethod === "delivery" && "outline outline-[2px]"
+          }`}
+        >
+          <Truck strokeWidth={1.5} size={20} />
+          Plaćanje pouzećem
+        </button>
+      </div>
       <Button
-        onClick={() => createCheckoutSession(cart.items, products)}
+        onClick={() => {
+          if (paymentMethod === "card") {
+            if (cart.items.length <= 0) {
+              toast({
+                title: "Korpa je prazna!",
+                description: "Molim vas dodajte nešto u korpu",
+                variant: "destructive",
+              });
+              return;
+            }
+            createCheckoutSession(cart.items, products);
+          } else {
+            router.push("/cart/delivery");
+          }
+        }}
         variant="secondary"
-        className="w-full mt-8"
+        className={`w-full mt-4 ${!paymentMethod && "hidden"}`}
       >
         Idi na plaćanje
       </Button>

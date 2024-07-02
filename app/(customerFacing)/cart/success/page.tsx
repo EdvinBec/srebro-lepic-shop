@@ -1,16 +1,20 @@
+"use client";
+
 import Heading from "@/components/Heading";
 import ProductsCarousel from "@/components/ProductsCarousel";
-import db from "@/db/db";
+import { CartContext } from "@/lib/CartContext";
 import { CheckCircle2 } from "lucide-react";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
+type Props = {};
 
-const Page = async ({ params: { slug } }: Props) => {
+const Page = ({}: Props) => {
+  const cart = useContext(CartContext);
+
+  useEffect(() => {
+    if (cart.items.length > 0) cart.clearCart();
+  });
+
   return (
     <>
       <div className="border-[1px] p-2 py-6">

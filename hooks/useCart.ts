@@ -12,7 +12,7 @@ export const createCheckoutSession = async (
 
   const transformedItems = transformCartItems(cartItems, products);
 
-  const checkoutSession = await axios.post("/api/stripe/setup", {
+  const checkoutSession = await axios.post("/api/stripe", {
     transformedItems,
     cartItems,
   });

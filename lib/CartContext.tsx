@@ -1,7 +1,5 @@
 "use client";
 
-import db from "@/db/db";
-import { Product } from "@prisma/client";
 import { createContext, useState } from "react";
 
 // Define CartItem type
@@ -20,6 +18,7 @@ type CartContextType = {
   removeOneFromCart: (id: string, size: number) => void;
   deleteFromCart: (id: string, size: number) => void;
   getTotalCost: () => number;
+  clearCart: () => void;
 };
 
 export const CartContext = createContext<CartContextType>({
@@ -37,6 +36,9 @@ export const CartContext = createContext<CartContextType>({
     throw new Error("deleteFromCart function not implemented");
   },
   getTotalCost: () => {
+    throw new Error("getTotalCost function not implemented");
+  },
+  clearCart: () => {
     throw new Error("getTotalCost function not implemented");
   },
 });
@@ -103,6 +105,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     return totalPrice;
   };
 
+  const clearCart = () => {
+    setCartProducts([]);
+  };
+
   const contextValue: CartContextType = {
     items: cartProducts,
     getProductQuantity,
@@ -110,6 +116,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     removeOneFromCart,
     deleteFromCart,
     getTotalCost,
+    clearCart,
   };
 
   return (
