@@ -1,12 +1,10 @@
 import db from "@/db/db";
 import { CartItem } from "@/lib/CartContext";
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-export const resend = new Resend("re_Qg6PeTUE_8xEro5FzSr9C74D2q3NDgYiy");
 
 const createOrder = async (
   customer: Stripe.Customer,
@@ -88,12 +86,6 @@ export async function POST(req: NextRequest) {
       await createOrder(customer as Stripe.Customer, data);
 
       // Send confirmation email
-      await resend.emails.send({
-        from: `support <${process.env.SENDER_EMAIL}>`,
-        to: data.customer_details?.email as string,
-        subject: "Potvrda narudžbe",
-        react: <h1>Hi</h1>,
-      });
 
       console.log("Confirmation email sent successfully.");
     } catch (error) {

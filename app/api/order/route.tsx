@@ -1,15 +1,12 @@
 // app/api/delivery-order/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Resend } from "resend";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import db from "@/db/db";
 import { CartItem } from "@/lib/CartContext";
-import Stripe from "stripe";
 
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 type Customer = {
   email: string;
@@ -89,13 +86,6 @@ export async function POST(req: NextRequest) {
     }
 
     createOrder(customer, cart);
-
-    await resend.emails.send({
-      from: `support <${process.env.SENDER_EMAIL}>`,
-      to: customer.email,
-      subject: "Potvrda narudžbe",
-      react: <h1>Hi</h1>, // Customize your email content
-    });
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

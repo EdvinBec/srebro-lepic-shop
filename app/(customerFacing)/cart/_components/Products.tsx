@@ -93,7 +93,9 @@ const ProductItem = ({
             {quantity}
           </div>
           <button
-            onClick={() => cartData.addOneToCart(product.id, size)}
+            onClick={() =>
+              cartData.addOneToCart(product.id, size, product.priceInCents)
+            }
             className="border-[1px] px-3 w-10 h-10 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all ease-out duration-100"
           >
             <Plus size={15} />
