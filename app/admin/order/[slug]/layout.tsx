@@ -6,7 +6,7 @@ type Props = {
 };
 
 const layout = ({ children }: Props) => {
-  return <div>{children}</div>;
+  return <MaxWidthWrapper>{children}</MaxWidthWrapper>;
 };
 
 export default layout;

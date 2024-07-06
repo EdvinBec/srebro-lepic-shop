@@ -3,12 +3,21 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import db from "@/db/db";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import React from "react";
+import {
+  getOrdersForCurrentMonth,
+  getOrdersForCurrentYear,
+  getOrdersForToday,
+} from "./_actions/orders";
+import { Label } from "@/components/ui/label";
+import AdminCard from "./_components/AdminCard";
+import OrdersTable from "./_components/OrdersTable";
 
 export const dynamic = "force-dynamic";
 
@@ -68,28 +77,25 @@ const page = async (props: Props) => {
     getProductData(),
   ]);
 
+  const thisMonthOrders = await getOrdersForCurrentMonth();
+  const todayOrders = await getOrdersForToday();
+  const thisYearOrders = await getOrdersForCurrentYear();
+  const notShippedOrders = thisYearOrders.filter((order) => !order.isSent);
+
+  console.log(thisYearOrders);
+
   return (
     <MaxWidthWrapper>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <DashboardCard
-          title="Sales"
-          subtitle={formatNumber(salesData.numberOfSales)}
-          body={formatCurrency(salesData.amount)}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <AdminCard orders={thisYearOrders} label="Broj narudžbi ove godine" />
+        <AdminCard
+          orders={thisMonthOrders}
+          label="Broj narudžbi ovog mjeseca"
         />
-        <DashboardCard
-          title="Customers"
-          subtitle={
-            formatCurrency(userData.averageValuePerUser) +
-            " Average value per user"
-          }
-          body={formatNumber(userData.userCount)}
-        />
-        <DashboardCard
-          title="Products"
-          subtitle={formatNumber(productData.inactiveCount) + " Inactive"}
-          body={formatNumber(productData.activeCount) + " Active"}
-        />
+        <AdminCard orders={todayOrders} label="Broj narudžbi danas" />
+        <AdminCard orders={notShippedOrders} label="Neobradjene narudžbe" />
       </div>
+      <OrdersTable orders={thisYearOrders.filter((order) => !order.isSent)} />
     </MaxWidthWrapper>
   );
 };

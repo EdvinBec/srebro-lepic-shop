@@ -19,7 +19,10 @@ type Props = {
 const Footer = ({ className }: Props) => {
   return (
     <footer
-      className={cn(className, "bg-accentYellow w-full py-11 text-darkGray")}
+      className={cn(
+        className,
+        "bg-accentYellow w-full py-11 text-darkGray print:hidden"
+      )}
     >
       <MaxWidthWrapper className="flex flex-col gap-8 md:flex-row justify-between">
         <div className="md:w-1/3">

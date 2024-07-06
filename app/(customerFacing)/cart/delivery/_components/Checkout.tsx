@@ -71,25 +71,27 @@ const Checkout = ({ products }: Props) => {
 
     setIsLoading(true);
 
-    const response = await fetch("/api/order", {
-      method: "POST",
-      body: JSON.stringify({
-        customer: {
-          email,
-          zip: data.address.postal_code,
-          address: data.address.line1,
-          phone: data.phone,
-          country: data.address.country,
-          city: data.address.city,
-          fullName: data.name,
-        },
-        cart: cart.items,
-      }),
-    });
+    try {
+      const response = await fetch("/api/order", {
+        method: "POST",
+        body: JSON.stringify({
+          customer: {
+            email,
+            zip: data.address.postal_code,
+            address: data.address.line1,
+            phone: data.phone,
+            country: data.address.country,
+            city: data.address.city,
+            fullName: data.name,
+          },
+          cart: cart.items,
+        }),
+      });
 
-    if (response.ok) {
-      router.push("/cart/success");
-    } else {
+      if (response.ok) {
+        router.push("/cart/success");
+      }
+    } catch (error) {
       setError("Došlo je do greške prilikom narudžbe");
     }
 
@@ -141,7 +143,7 @@ const Checkout = ({ products }: Props) => {
               <Button variant="secondary" className="w-full">
                 {isLoading
                   ? "Naručujem..."
-                  : `Naruči - ${formatCurrency(cart.getTotalCost())}`}
+                  : `Naruči - ${formatCurrency(cart.getTotalCost() + 5)}`}
               </Button>
             </CardFooter>
           </Card>

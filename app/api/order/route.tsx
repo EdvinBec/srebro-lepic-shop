@@ -55,13 +55,14 @@ const createOrder = async (customer: Customer, data: CartItem[]) => {
     const order = await tx.order.create({
       data: {
         userId: user.id,
-        price: totalPrice,
+        price: (totalPrice + 5) * 100,
+        paymentMethod: "Po pouzeću", // "Cash on delivery
         products: {
           create: cart.map((item: CartItem) => ({
             productId: item.id,
             quantity: item.quantity,
             size: item.size,
-            price: item.price,
+            price: item.price * 100,
           })),
         },
       },

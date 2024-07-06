@@ -12,7 +12,7 @@ type Props = {
 const layout = ({ children }: Props) => {
   return (
     <>
-      <AdminNavigation className="mt-4 border-y-[1px] py-2">
+      <AdminNavigation className="mt-4 border-y-[1px] py-2 print:hidden">
         <NavLink href="/admin">Početak</NavLink>
         <NavLink href="/admin/products">Artkili</NavLink>
         <NavLink href="/admin/orders">Narudžbe</NavLink>

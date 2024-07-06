@@ -38,20 +38,21 @@ model User {
 }
 
 model Order {
-  id               String   @id @default(uuid())
+  id               Int  @id @default(autoincrement())
   isSent           Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   userId           String
+  paymentMethod    String
   price           Int
   products         OrderItem[]
   user             User     @relation(fields: [userId], references: [id])
 }
 
 model OrderItem {
-  id        String   @id @default(uuid())
+  id        Int   @id @default(autoincrement())
   productId String
-  orderId   String
+  orderId   Int
   size      Float
   quantity  Int
   price Int

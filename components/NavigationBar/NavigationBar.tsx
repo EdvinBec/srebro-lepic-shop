@@ -53,8 +53,8 @@ const NavigationBar = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <MaxWidthWrapper className="px-0 md:px-2 lg:px-20">
-      <nav className="flex justify-between items-center py-4 pl-8 pr-4 md:px-0">
+    <MaxWidthWrapper className="px-0 md:px-2 lg:px-20 print:hidden">
+      <nav className="flex justify-between items-center py-4 pl-8 pr-4 md:px-0 print:hidden">
         <ul className="gap-6 hidden md:flex w-1/3">
           {NavLinks.map((item: NavLink, itemIdx: number) => {
             return (

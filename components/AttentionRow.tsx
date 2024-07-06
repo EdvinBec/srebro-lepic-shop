@@ -9,7 +9,7 @@ type Props = {
 
 const AttentionRow = ({ label }: Props) => {
   return (
-    <section>
+    <section className="print:hidden">
       <div className="py-2 bg-accentYellow w-full flex justify-center items-center gap-4">
         <Image src={StarsLeft} alt="stars" className="hidden md:block" />
         <h3 className="text-[12px] text-darkGray">{label}</h3>

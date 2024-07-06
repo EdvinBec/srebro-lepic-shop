@@ -42,12 +42,13 @@ const createOrder = async (
       data: {
         userId: user.id,
         price: data.amount_total!,
+        paymentMethod: "Kartica",
         products: {
           create: cart.map((item: CartItem) => ({
             productId: item.id,
             quantity: item.quantity,
             size: item.size,
-            price: item.price,
+            price: item.price * 100,
           })),
         },
       },
