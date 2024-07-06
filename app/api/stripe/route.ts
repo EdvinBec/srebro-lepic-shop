@@ -12,16 +12,21 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const { transformedItems, cartItems } = await req.json();
-
-  const customer = await stripe.customers.create({
-    metadata: {
-      userId: uuidv4(),
-      cart: JSON.stringify(cartItems),
-    },
-  });
-
   try {
+    const { transformedItems, cartItems } = await req.json();
+
+    console.log("Received transformedItems:", transformedItems);
+    console.log("Received cartItems:", cartItems);
+
+    const customer = await stripe.customers.create({
+      metadata: {
+        userId: uuidv4(),
+        cart: JSON.stringify(cartItems),
+      },
+    });
+
+    console.log("Created customer:", customer.id);
+
     const params: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ["card"],
       shipping_options: [
@@ -50,11 +55,16 @@ export async function POST(req: NextRequest) {
 
     const checkoutSession = await stripe.checkout.sessions.create(params);
 
+    console.log("Created checkout session:", checkoutSession.id);
+
     return NextResponse.json(checkoutSession);
   } catch (err) {
-    console.error("Error creating checkout session: ", err);
+    console.error("Error creating checkout session:", err);
     const errorMessage =
       err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json(err);
+    return NextResponse.json(
+      { statusCode: 500, message: errorMessage },
+      { status: 500 }
+    );
   }
 }
