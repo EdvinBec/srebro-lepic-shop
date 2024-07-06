@@ -45,8 +45,8 @@ export async function POST(req: NextRequest) {
       customer: customer.id,
       line_items: transformedItems,
       mode: "payment",
-      success_url: `${req.nextUrl.origin}/success/{CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.nextUrl.origin}/`,
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/success/{CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
       shipping_address_collection: {
         allowed_countries: ["BA", "HR", "RS", "ME", "MK", "SI", "BG", "AL"],
       },
