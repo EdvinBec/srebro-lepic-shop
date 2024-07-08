@@ -12,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { CartContext, CartItem } from "@/lib/CartContext";
 import { formatCurrency } from "@/lib/formatters";
+import { stripePromise } from "@/utils/helpers";
 import { Product } from "@prisma/client";
 import {
   AddressElement,
@@ -39,10 +40,6 @@ type DeliveryFormData = {
 };
 
 type CombinedProductCartItem = Product & CartItem;
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!, {
-  locale: "hr",
-});
 
 const Checkout = ({ products }: Props) => {
   const router = useRouter();

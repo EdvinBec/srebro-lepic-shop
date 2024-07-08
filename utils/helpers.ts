@@ -1,5 +1,6 @@
 import { CartItem } from "@/lib/CartContext";
 import { Product } from "@prisma/client";
+import { loadStripe } from "@stripe/stripe-js";
 
 type UntransformedCartItem = {
   quantity: number;
@@ -42,3 +43,11 @@ export const transformCartItems = (items: CartItem[], products: Product[]) => {
     quantity: item.quantity,
   }));
 };
+
+export const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
+  {
+    apiVersion: "2024-04-10",
+    locale: "hr",
+  }
+);

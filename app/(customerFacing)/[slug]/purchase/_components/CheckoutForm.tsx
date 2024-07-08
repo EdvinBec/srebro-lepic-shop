@@ -24,14 +24,11 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CreditCard, Truck } from "lucide-react";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { CartContext } from "@/lib/CartContext";
+import { stripePromise } from "@/utils/helpers";
 
 type Props = {
   products: Product[];
 };
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!, {
-  locale: "hr",
-});
 
 const CheckoutForm = ({ products }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState("card");
