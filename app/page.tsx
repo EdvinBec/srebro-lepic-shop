@@ -1,19 +1,25 @@
 import Heading from "@/components/Heading";
-import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ProductsCarousel from "@/components/ProductsCarousel";
-
 import Nadia from "@/public/assets/Nadia.jpg";
-
-import Article from "@/components/Article";
 import Pandora from "@/public/assets/Pandora.svg";
 import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
-import ShowRow from "@/components/ShowRow";
+import dynamic from "next/dynamic";
 
-export const dynamic = "force-dynamic";
+export const forceDynamic = "force-dynamic";
 
-export default async function Home() {
+// Dynamic imports for heavy components
+const HeroSection = dynamic(() => import("@/components/HeroSection"), {
+  ssr: false,
+});
+const ProductsCarousel = dynamic(
+  () => import("@/components/ProductsCarousel"),
+  { ssr: false }
+);
+const Article = dynamic(() => import("@/components/Article"), { ssr: false });
+const ShowRow = dynamic(() => import("@/components/ShowRow"), { ssr: false });
+
+export default function Home() {
   return (
     <div className="">
       <HeroSection />

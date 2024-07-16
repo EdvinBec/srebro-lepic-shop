@@ -4,11 +4,19 @@ import { Label } from "@/components/ui/label";
 import { CartContext, CartItem } from "@/lib/CartContext";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { Product } from "@prisma/client";
 import { Minus, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
+
+type Product = {
+  id: string;
+  name: string;
+  priceInCents: number;
+  oldPrice: number;
+  image: string[];
+  availableSizes: number[];
+};
 
 type Props = {
   products: Product[];

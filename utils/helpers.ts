@@ -1,6 +1,15 @@
 import { CartItem } from "@/lib/CartContext";
-import { Product } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
+
+type Product = {
+  id: string;
+  name: string;
+  priceInCents: number;
+  oldPrice: number;
+  image: string[];
+  availableSizes: number[];
+  description: string;
+};
 
 type UntransformedCartItem = {
   quantity: number;

@@ -20,7 +20,13 @@ import { Product } from "@prisma/client";
 import { AddressElement, Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useContext, useState } from "react";
+import React, {
+  FormEvent,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 
 type Props = {
   products: Product[];
@@ -35,112 +41,125 @@ const Checkout = ({ products, deliveryFee }: Props) => {
   const { toast } = useToast();
 
   // Filter products that are in the cart
-  const filteredProducts: CombinedProductCartItem[] = [];
-  products.map((product) => {
-    cart.items.find((item) => {
-      if (item.id === product.id)
-        filteredProducts.push({ ...product, ...item });
-    });
-  });
+  const filteredProducts: CombinedProductCartItem[] = useMemo(
+    () =>
+      products.reduce((acc, product) => {
+        const item = cart.items.find((item) => item.id === product.id);
+        if (item) acc.push({ ...product, ...item });
+        return acc;
+      }, [] as CombinedProductCartItem[]),
+    [products, cart.items]
+  );
 
   const [data, setData] = useState<DeliveryFormData>();
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (cart.items.length <= 0) {
-      toast({
-        title: "Korpa je prazna",
-        description:
-          "Molimo vas dodajte nešto u korpu, da bi izvršili narudžbu",
-        variant: "destructive",
-      });
-      return;
-    }
+  const totalCost = useMemo(() => cart.getTotalCost(), [cart]);
+  const totalPrice = useMemo(
+    () => (cart.items.length === 0 ? totalCost : totalCost + deliveryFee),
+    [cart.items.length, totalCost, deliveryFee]
+  );
 
-    if (!data) {
-      toast({
-        title: "Nema podataka za dostavu",
-        description: "Molimo unesite podatke za dostavu",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!email || email === "") {
-      toast({
-        title: "Email je obavezan",
-        description: "Molimo unesite vaš email",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        body: JSON.stringify({
-          customer: {
-            email,
-            zip: data.address.postal_code,
-            address: data.address.line1,
-            phone: data.phone,
-            country: data.address.country,
-            city: data.address.city,
-            fullName: data.name,
-          },
-          cart: cart.items,
-        }),
-      });
-
-      if (response.status === 200) {
-        router.push("/cart/success");
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      if (cart.items.length <= 0) {
+        toast({
+          title: "Korpa je prazna",
+          description:
+            "Molimo vas dodajte nešto u korpu, da bi izvršili narudžbu",
+          variant: "destructive",
+        });
+        return;
       }
-    } catch (error) {
-      toast({
-        title: "Greška",
-        description: "Došlo je do greške prilikom narudžbe",
-        variant: "destructive",
-      });
-    }
 
-    setIsLoading(false);
-  };
+      if (!data) {
+        toast({
+          title: "Nema podataka za dostavu",
+          description: "Molimo unesite podatke za dostavu",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!email || email === "") {
+        toast({
+          title: "Email je obavezan",
+          description: "Molimo unesite vaš email",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setIsLoading(true);
+
+      try {
+        const response = await fetch("/api/order", {
+          method: "POST",
+          body: JSON.stringify({
+            customer: {
+              email,
+              zip: data.address.postal_code,
+              address: data.address.line1,
+              phone: data.phone,
+              country: data.address.country,
+              city: data.address.city,
+              fullName: data.name,
+            },
+            cart: cart.items,
+          }),
+        });
+
+        if (response.status === 200) {
+          router.push("/cart/success");
+        } else {
+          throw new Error("Order submission failed");
+        }
+      } catch (error) {
+        toast({
+          title: "Greška",
+          description: "Došlo je do greške prilikom narudžbe",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [cart.items, data, email, router, toast]
+  );
 
   return (
     <MaxWidthWrapper>
       <div className="mt-4 flex flex-col gap-8 w-full justify-between">
         <div className="flex flex-col justify-between items-start">
           <div className="flex flex-col sm:flex-row gap-6">
-            {filteredProducts.map((product) => {
-              return (
-                <div key={product.id} className="flex gap-2">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="flex gap-2">
+                <div className="relative w-16 h-16">
                   <Image
                     src={product.image[0]}
                     alt={product.name}
                     className="rounded-sm mb-1"
-                    width={50}
-                    height={50}
+                    layout="fill"
+                    objectFit="cover"
                   />
-                  <div>
-                    <h1 className="font-semibold text-sm">{product.name}</h1>
-                    <p className="text-xs mb-1">Količina: {product.quantity}</p>
-                    <p className="text-xs mb-1">Veličina: {product.size}</p>
-                    <Label
-                      className={`${
-                        product.oldPrice && "font-bold text-destructive"
-                      }`}
-                    >
-                      {formatCurrency(product.priceInCents)}
-                    </Label>
-                  </div>
                 </div>
-              );
-            })}
+                <div>
+                  <h1 className="font-semibold text-sm">{product.name}</h1>
+                  <p className="text-xs mb-1">Količina: {product.quantity}</p>
+                  <p className="text-xs mb-1">Veličina: {product.size}</p>
+                  <Label
+                    className={`${
+                      product.oldPrice && "font-bold text-destructive"
+                    }`}
+                  >
+                    {formatCurrency(product.priceInCents)}
+                  </Label>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="border-[1px] px-4 py-4 mt-4 rounded-sm w-full">
             <h1 className="font-bold text-2xl">Zajedno</h1>
@@ -148,24 +167,20 @@ const Checkout = ({ products, deliveryFee }: Props) => {
               <div className="flex gap-4 items-center mt-8 justify-between">
                 <Label className="text-sm">Srednja suma</Label>
                 <span className="text-sm text-nowrap">
-                  {formatCurrency(cart.getTotalCost())}
+                  {formatCurrency(totalCost)}
                 </span>
               </div>
               <div className="flex items-center mt-8 justify-between">
                 <Label className="text-sm">Dostava</Label>
                 <span className="text-sm text-nowrap">
-                  {cart.items.length == 0
-                    ? formatCurrency(0)
-                    : formatCurrency(deliveryFee)}
+                  {formatCurrency(cart.items.length === 0 ? 0 : deliveryFee)}
                 </span>
               </div>
             </div>
             <div className="flex items-center mt-8 justify-between">
               <Label className="text-sm">Ukupna cijena</Label>
               <span className="text-sm text-nowrap">
-                {cart.items.length == 0
-                  ? formatCurrency(cart.getTotalCost())
-                  : formatCurrency(cart.getTotalCost() + deliveryFee)}
+                {formatCurrency(totalPrice)}
               </span>
             </div>
           </div>
@@ -213,9 +228,7 @@ const Checkout = ({ products, deliveryFee }: Props) => {
                 <Button variant="secondary" className="w-full">
                   {isLoading
                     ? "Naručujem..."
-                    : `Naruči - ${formatCurrency(
-                        cart.getTotalCost() + deliveryFee
-                      )}`}
+                    : `Naruči - ${formatCurrency(totalPrice)}`}
                 </Button>
               </CardFooter>
             </Card>

@@ -14,7 +14,17 @@ import { Minus, Plus } from "lucide-react";
 
 type Props = {
   availableSizes: number[];
-  product: Product;
+  product: {
+    id: string;
+    name: string;
+    image: string[];
+    priceInCents: number;
+    oldPrice: number;
+    availableSizes: number[];
+    weightInGrams: number;
+    description: string;
+    category: string;
+  };
   className?: string;
   id: string;
 };

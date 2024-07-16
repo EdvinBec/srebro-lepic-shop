@@ -1,6 +1,5 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import db from "@/db/db";
-import { Product } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
 
@@ -18,55 +17,72 @@ type Props = {
 };
 
 const page = async ({ params: { slug } }: Props) => {
-  const product: Product | null = await db.product.findUnique({
-    where: {
-      id: slug,
+  const product = await db.product.findUnique({
+    where: { id: slug },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      priceInCents: true,
+      oldPrice: true,
+      availableSizes: true,
+      weightInGrams: true,
+      description: true,
+      category: true,
     },
   });
 
-  const images = product?.image;
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
-  console.log(product);
+  const {
+    image: images,
+    name,
+    priceInCents,
+    oldPrice,
+    availableSizes,
+    weightInGrams,
+    description,
+  } = product;
 
   return (
-    <MaxWidthWrapper className=" text-darkGray py-8">
+    <MaxWidthWrapper className="text-darkGray py-8">
       <div className="flex flex-col md:flex-row gap-10">
-        <ImagePicker productName={product?.name!} imagess={images!} />
+        {images && <ImagePicker productName={name} imagess={images} />}
         <div className="flex flex-col justify-between w-full md:max-w-96">
           <div>
             <Image src={Logo} alt="Logo" />
-            <h2 className="mt-2 font-semibold text-2xl">{product?.name}</h2>
+            <h2 className="mt-2 font-semibold text-2xl">{name}</h2>
 
-            <div className="mt-5 ">
+            <div className="mt-5">
               <div className="flex items-end gap-2">
                 <Label
                   className={`text-xl font-normal ${
-                    product?.oldPrice != 0 && "text-destructive font-bold"
+                    oldPrice ? "text-destructive font-bold" : ""
                   }`}
                 >
-                  {formatCurrency(product?.priceInCents!)}
+                  {formatCurrency(priceInCents)}
                 </Label>
                 <Label className="text-sm opacity-80 font-normal mb-[2px]">
                   PDV je uključen
                 </Label>
               </div>
-              <Label
-                className={`opacity-70 text-sm ${
-                  product?.oldPrice === 0 && "hidden"
-                }`}
-              >
-                <span>Orginalna cijena: </span>
-                {formatCurrency(product?.oldPrice!)}
-              </Label>
+              {oldPrice !== 0 && (
+                <Label className="opacity-70 text-sm">
+                  <span>Orginalna cijena: </span>
+                  {formatCurrency(oldPrice)}
+                </Label>
+              )}
             </div>
           </div>
 
           <div className="flex flex-col gap-4">
             <AddToCart
-              id={slug!}
+              id={slug}
               className="mt-12"
-              availableSizes={product?.availableSizes!}
-              product={product!}
+              availableSizes={availableSizes}
+              product={product}
             />
 
             <div>
@@ -88,7 +104,7 @@ const page = async ({ params: { slug } }: Props) => {
               <div className="border-[1px] border-t-0 px-4 py-3">
                 <Label className="text-sm">Material</Label>
                 <Label className="text-sm block font-normal opacity-80">
-                  Zlato {formatWeight(product?.weightInGrams!)}
+                  Zlato {formatWeight(weightInGrams)}
                 </Label>
               </div>
             </div>
@@ -97,7 +113,7 @@ const page = async ({ params: { slug } }: Props) => {
       </div>
       <div className="mt-10">
         <h2 className="font-bold text-2xl">Opis proizvoda</h2>
-        <p className="text-sm md:w-2/3">{product?.description}</p>
+        <p className="text-sm md:w-2/3">{description}</p>
       </div>
     </MaxWidthWrapper>
   );
