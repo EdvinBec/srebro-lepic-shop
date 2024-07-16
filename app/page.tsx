@@ -6,8 +6,6 @@ import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
 import dynamic from "next/dynamic";
 
-export const forceDynamic = "force-dynamic";
-
 // Dynamic imports for heavy components
 const HeroSection = dynamic(() => import("@/components/HeroSection"), {
   ssr: false,
