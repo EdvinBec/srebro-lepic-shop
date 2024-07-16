@@ -12,12 +12,14 @@ model Product {
   id                      String   @id @default(uuid())
   name                    String
   priceInCents            Float
-  image                   String
+  oldPrice                Float
+  image                   String[] 
   description             String
   category                String
   weightInGrams           Float
   availableSizes          Float[]
   isAvailabileForPurchase Boolean
+  isFeatured              Boolean
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
   orderItems              OrderItem[]
@@ -58,4 +60,12 @@ model OrderItem {
   price Int
   order     Order    @relation(fields: [orderId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
+}
+
+model ShopSettings {
+  id        Int     @id @default(autoincrement())
+  deliveryFee  Int
+  attentionMessage String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

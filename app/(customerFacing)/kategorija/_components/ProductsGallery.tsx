@@ -20,7 +20,7 @@ const ProductsGallery = ({ products }: Props) => {
         >
           <div>
             <Image
-              src={item.image}
+              src={item.image[0]}
               alt={item.name}
               height={200}
               width={300}
@@ -28,7 +28,22 @@ const ProductsGallery = ({ products }: Props) => {
             />
             <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
             <h3 className="text-sm mt-1.5">{item.name}</h3>
-            <p className="mt-2.5">{formatCurrency(item.priceInCents)}</p>
+            <div className="flex items-center gap-2 mt-2.5">
+              <p
+                className={`${
+                  item.oldPrice != 0 && "text-destructive font-bold"
+                }`}
+              >
+                {formatCurrency(item.priceInCents)}
+              </p>
+              <p
+                className={`mt-1  ${
+                  item.oldPrice != 0 ? "text-xs block" : "hidden"
+                }`}
+              >
+                {formatCurrency(item.oldPrice)}
+              </p>
+            </div>
           </div>
         </Link>
       ))}

@@ -3,15 +3,12 @@
 import { Label } from "@/components/ui/label";
 import { CartContext, CartItem } from "@/lib/CartContext";
 import { formatCurrency } from "@/lib/formatters";
-import { removeFromCart } from "@/lib/slices/cartSlice";
-import { RootState } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Product } from "@prisma/client";
 import { Minus, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
 
 type Props = {
   products: Product[];
@@ -55,15 +52,18 @@ const ProductItem = ({
   const quantity = cartData.getProductQuantity(product.id, size);
 
   return (
-    <div className="flex justify-between my-4 py-2 hover:opacity-85 transition-all ease-in-out duration-150">
+    <div className="flex justify-between my-4 py-2  transition-all ease-in-out duration-150">
       <div className="flex items-center md:items-stretch gap-5">
-        <Image
-          src={product!.image}
-          alt={product!.name}
-          width={120}
-          height={100}
-          className="w-[50px] h-[50px] md:w-[120px] md:h-[100px]"
-        />
+        <div className="relative h-24 w-24 flex items-center overflow-hidden">
+          <Image
+            src={product!.image[0]}
+            alt={product!.name}
+            width={120}
+            height={100}
+            layout="responsive"
+            className="w-[50px] h-[50px] md:w-[120px] md:h-[100px]"
+          />
+        </div>
         <div className="flex flex-col gap-2 md:gap-0 justify-between py-1">
           <div>
             <Link className="font-medium text-sm block" href={`/${product.id}`}>
@@ -75,7 +75,7 @@ const ProductItem = ({
           </div>
           <button
             onClick={() => cartData.deleteFromCart(product!.id, size)}
-            className="opacity-60 text-xs flex items-center gap-2 hover:opacity-60"
+            className="text-xs font-bold flex items-center gap-2 hover:opacity-60 text-red-500"
           >
             <Trash size={18} strokeWidth={1.5} /> Ukloni
           </button>
@@ -101,7 +101,11 @@ const ProductItem = ({
             <Plus size={15} />
           </button>
         </div>
-        <Label className="font-bold text-sm">
+        <Label
+          className={`font-bold text-sm ${
+            product.oldPrice != 0 && "text-destructive font-bold"
+          }`}
+        >
           {formatCurrency(product!.priceInCents * quantity)}
         </Label>
       </div>

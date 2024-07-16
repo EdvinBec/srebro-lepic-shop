@@ -10,7 +10,8 @@ import Pandora from "@/public/assets/Pandora.svg";
 import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
 import ShowRow from "@/components/ShowRow";
-import db from "@/db/db";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   return (
@@ -19,13 +20,13 @@ export default async function Home() {
       <MaxWidthWrapper>
         <section>
           <Heading className="mt-10 md:mt-16">Naše preporuke</Heading>
-          <ProductsCarousel />
+          <ProductsCarousel featured={true} />
         </section>
         <Article
           heading="PERSONALIZOVANI POKLONI"
           buttonLabel="Istražite našu kolekciju"
           image={Nadia}
-          href="/sa-porukom"
+          href="/kategorija/nakit-sa-posvetom"
         >
           <div>
             <p className="text-sm mt-4">

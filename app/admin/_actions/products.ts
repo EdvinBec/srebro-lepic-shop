@@ -6,6 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import minioClient from "@/lib/minioClient";
 import { Readable } from "stream";
 import { revalidatePath } from "next/cache";
+import exp from "constants";
 
 // Define schemas using zod
 const addSchema = z.object({
@@ -67,19 +68,28 @@ export const updateProduct = async (
     return notFound();
   }
 
-  const objectName = getObjectNameFromUrl(product.image);
-  let imagePath = product.image;
+  const objectNames: string[] = [];
+  product.image.forEach((image) => {
+    const objectName = getObjectNameFromUrl(image);
+    objectNames.push(objectName);
+  });
 
-  if (data.image && data.image.size > 0) {
-    await minioClient.removeObject(
-      process.env.MINIO_IMAGE_BUCKET!,
-      objectName!
-    );
-    imagePath = await uploadFileToMinio(
-      process.env.MINIO_IMAGE_BUCKET!,
-      data.image
-    );
-  }
+  const imagePaths: string[] = [];
+  objectNames.forEach(async (objectName) => {
+    await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
+  });
+
+  const uploadPromises = Array.from(formData.values()).map(async (value) => {
+    if (value instanceof File) {
+      const imagePath = await uploadFileToMinio(
+        process.env.MINIO_IMAGE_BUCKET!,
+        value
+      );
+      imagePaths.push(imagePath);
+    }
+  });
+
+  await Promise.all(uploadPromises);
 
   await db.product.update({
     where: { id },
@@ -87,7 +97,7 @@ export const updateProduct = async (
       name: data.name,
       description: data.description,
       priceInCents: data.priceInCents,
-      image: imagePath,
+      image: imagePaths,
       weightInGrams: data.weight,
       category: data.category,
       availableSizes: sizes,
@@ -108,28 +118,63 @@ export const addProduct = async (prevState: unknown, formData: FormData) => {
 
   const data = result.data;
   const sizes = data.sizes.split(",").map((size) => Number(size)) || [0];
+  const imagePaths: string[] = [];
 
-  const imagePath = await uploadFileToMinio(
-    process.env.MINIO_IMAGE_BUCKET!,
-    data.image
-  );
+  const uploadPromises = Array.from(formData.values()).map(async (value) => {
+    if (value instanceof File) {
+      const imagePath = await uploadFileToMinio(
+        process.env.MINIO_IMAGE_BUCKET!,
+        value
+      );
+      imagePaths.push(imagePath);
+    }
+  });
+
+  // Wait for all promises to resolve
+  await Promise.all(uploadPromises);
 
   await db.product.create({
     data: {
       name: data.name,
       description: data.description,
       priceInCents: data.priceInCents,
-      image: imagePath,
+      oldPrice: 0,
+      image: imagePaths,
       weightInGrams: data.weight,
       category: data.category,
       isAvailabileForPurchase: true,
       availableSizes: sizes,
+      isFeatured: false,
     },
   });
 
   revalidatePath(`/products`);
   revalidatePath("/");
   redirect("/admin/products");
+};
+
+export const addDiscount = async (
+  id: string,
+  newPrice: number,
+  oldPrice: number
+) => {
+  await db.product.update({
+    where: { id },
+    data: { priceInCents: newPrice, oldPrice: oldPrice },
+  });
+
+  revalidatePath(`/products`);
+  revalidatePath("/");
+};
+
+export const removeDiscount = async (id: string, originalPrice: number) => {
+  await db.product.update({
+    where: { id },
+    data: { priceInCents: originalPrice, oldPrice: 0 },
+  });
+
+  revalidatePath(`/products`);
+  revalidatePath("/");
 };
 
 // Function to toggle product availability
@@ -143,6 +188,13 @@ export const toggleProductAvailability = async (
   revalidatePath("/");
 };
 
+export const toggleIsFeatured = async (id: string, isFeatured: boolean) => {
+  await db.product.update({ where: { id }, data: { isFeatured } });
+
+  revalidatePath(`/products`);
+  revalidatePath("/");
+};
+
 // Function to delete a product
 export const deleteProduct = async (id: string) => {
   const product = await db.product.delete({ where: { id } });
@@ -150,8 +202,9 @@ export const deleteProduct = async (id: string) => {
     return notFound();
   }
 
-  const objectName = getObjectNameFromUrl(product.image);
-  await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName!);
+  product.image.forEach(async (objectName) => {
+    await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
+  });
 
   revalidatePath(`/products`);
   revalidatePath("/");

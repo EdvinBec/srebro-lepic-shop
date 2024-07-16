@@ -18,31 +18,35 @@ import {
 import db from "@/db/db";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { LucideCheckCircle2, MoreVertical, XCircle } from "lucide-react";
+import { Check, LucideCheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import {
   ActiveToggleDropdownItem,
+  AddDiscountDrawer,
   DeleteDropdownItem,
+  FeaturedToggleDropdownItem,
+  RemoveDiscountDropdown,
 } from "./_components/ProductActions";
 import Sidebar from "./_components/Sidebar";
 import Image from "next/image";
 import Button from "@/components/Button/Button";
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { removeDiscount } from "../_actions/products";
 
 type Props = {};
 
 const page = async (props: Props) => {
-  const products = await db.product.findMany();
-
   return (
     <MaxWidthWrapper>
       <div className="flex gap-4 justify-between items-end">
         <Heading className="mt-8" side="left" star={false}>
           Artikli
         </Heading>
-        <Button variant="secondary">
-          <Link href="/admin/products/new">Dodaj novi artikal</Link>
-        </Button>
+        <Link href="/admin/products/new">
+          <Button variant="secondary">Dodaj novi artikal</Button>
+        </Link>
       </div>
       <div className="mt-12 flex gap-8">
         <Sidebar />
@@ -71,6 +75,8 @@ export const ProdcutsTable = async ({
       priceInCents: true,
       image: true,
       isAvailabileForPurchase: true,
+      isFeatured: true,
+      oldPrice: true,
       _count: {
         select: {
           orderItems: true,
@@ -85,80 +91,124 @@ export const ProdcutsTable = async ({
   }
 
   return (
-    <Table className={cn(className)}>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-0">
-            <span className="sr-only">Available for Purchase</span>
-          </TableHead>
-          <TableHead>Slika</TableHead>
-          <TableHead>Ime artikla</TableHead>
-          <TableHead>Cijena</TableHead>
-          <TableHead>Narudžbe</TableHead>
-          <TableHead className="w-0">
-            <span className="sr-only">Actions</span>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {products.map((product) => {
-          return (
-            <TableRow key={product.id}>
-              <TableCell>
-                {product.isAvailabileForPurchase ? (
-                  <>
-                    <LucideCheckCircle2 />
-                    <span className="sr-only">Availabile</span>
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="text-red-500" />
-                    <span className="sr-only">Unavailabile</span>
-                  </>
-                )}
-              </TableCell>
-              <TableCell>
-                <Image
-                  src={product.image}
-                  height={60}
-                  width={60}
-                  alt="Product image"
+    <Drawer>
+      <Table className={cn(className)}>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-0">
+              <span className="sr-only">Available for Purchase</span>
+            </TableHead>
+            <TableHead>Slika</TableHead>
+            <TableHead>Ime artikla</TableHead>
+            <TableHead className="text-center">Cijena</TableHead>
+            <TableHead>Narudžbe</TableHead>
+            <TableHead className="w-0">
+              <span className="sr-only">Actions</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {products.map((product) => {
+            return (
+              <>
+                <TableRow key={product.id}>
+                  <TableCell>
+                    {product.isAvailabileForPurchase ? (
+                      <>
+                        <LucideCheckCircle2 />
+                        <span className="sr-only">Availabile</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="text-red-500" />
+                        <span className="sr-only">Unavailabile</span>
+                      </>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.image[0]}
+                      height={60}
+                      width={60}
+                      alt="Product image"
+                    />
+                  </TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell className="flex flex-col items-center">
+                    <span className={`${product.oldPrice == 0 && "mt-4"}`}>
+                      <span
+                        className={`${
+                          product.oldPrice != 0 && "text-destructive"
+                        }`}
+                      >
+                        {formatCurrency(product.priceInCents)}
+                      </span>
+                    </span>
+                    <span className={` ${product.oldPrice === 0 && "hidden"}`}>
+                      {formatCurrency(product.oldPrice)}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {formatNumber(product._count.orderItems)}
+                  </TableCell>
+                  <TableCell>
+                    {product.isFeatured && (
+                      <LucideCheckCircle2
+                        className="text-accentYellow"
+                        size={20}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <MoreVertical />
+                        <span className="sr-only">Actions</span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/${product.id}`}>Pogledaj</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/admin/products/${product.id}/edit`}>
+                            Uredi
+                          </Link>
+                        </DropdownMenuItem>
+                        <FeaturedToggleDropdownItem
+                          id={product.id}
+                          isFeatured={product.isFeatured}
+                        />
+                        <ActiveToggleDropdownItem
+                          id={product.id}
+                          isAvailabileForPurchase={
+                            product.isAvailabileForPurchase
+                          }
+                        />
+                        <DropdownMenuSeparator />
+                        <DeleteDropdownItem
+                          id={product.id}
+                          disabled={product._count.orderItems > 0}
+                        />
+                        <DropdownMenuItem>
+                          <DrawerTrigger>Dodaj popust</DrawerTrigger>
+                        </DropdownMenuItem>
+                        <RemoveDiscountDropdown
+                          id={product.id}
+                          oldPrice={product.oldPrice}
+                        />
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+                <AddDiscountDrawer
+                  id={product.id}
+                  oldPrice={product.priceInCents}
                 />
-              </TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{formatCurrency(product.priceInCents)}</TableCell>
-              <TableCell>{formatNumber(product._count.orderItems)}</TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <MoreVertical />
-                    <span className="sr-only">Actions</span>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/${product.id}`}>Pogledaj</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/admin/products/${product.id}/edit`}>
-                        Uredi
-                      </Link>
-                    </DropdownMenuItem>
-                    <ActiveToggleDropdownItem
-                      id={product.id}
-                      isAvailabileForPurchase={product.isAvailabileForPurchase}
-                    />
-                    <DropdownMenuSeparator />
-                    <DeleteDropdownItem
-                      id={product.id}
-                      disabled={product._count.orderItems > 0}
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+              </>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </Drawer>
   );
 };

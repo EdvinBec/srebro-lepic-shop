@@ -44,8 +44,19 @@ const page = async ({ params: { slug } }: Props) => {
     products.push({ ...product!, quantity: item.quantity, size: item.size });
   }
 
+  const deliveryFee = await db.shopSettings.findUnique({
+    where: { id: 1 },
+  });
+
   console.log(user);
-  return <OrderData order={order!} user={user!} products={products!} />;
+  return (
+    <OrderData
+      order={order!}
+      deliveryFee={Number(deliveryFee?.deliveryFee)}
+      user={user!}
+      products={products!}
+    />
+  );
 };
 
 export default page;

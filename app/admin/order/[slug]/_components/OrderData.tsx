@@ -26,11 +26,13 @@ type Props = {
     country: string;
     city: string;
     zip: string;
+    email: string;
   };
   products: combinedType[];
+  deliveryFee: number;
 };
 
-const OrderData = ({ order, user, products }: Props) => {
+const OrderData = ({ order, user, products, deliveryFee }: Props) => {
   return (
     <div className="flex flex-col mt-8">
       <div className="flex justify-between">
@@ -68,6 +70,10 @@ const OrderData = ({ order, user, products }: Props) => {
           <div>
             <Label>Ime i prezime: </Label>
             <span>{user?.fullName}</span>
+          </div>
+          <div>
+            <Label>Email: </Label>
+            <span>{user?.email}</span>
           </div>
           <div>
             <Label>Telefon: </Label>
@@ -109,12 +115,15 @@ const OrderData = ({ order, user, products }: Props) => {
                 className="text-center hover:bg-black hover:bg-opacity-5 transition-all ease-in-out duration-200 rounded-sm"
               >
                 <td className="flex justify-center py-2">
-                  <Image
-                    src={product.image!}
-                    alt={product.name!}
-                    width={80}
-                    height={80}
-                  />
+                  <div className="relative h-20 w-20 overflow-hidden">
+                    <Image
+                      src={product.image[0]}
+                      alt={product.name!}
+                      layout="responsive"
+                      width={80}
+                      height={80}
+                    />
+                  </div>
                 </td>
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
@@ -127,21 +136,21 @@ const OrderData = ({ order, user, products }: Props) => {
                 Proizvodi:
               </td>
               <td className="text-center">
-                {formatCurrency(order?.price! / 100)}
+                {formatCurrency(order?.price! / 100 - deliveryFee)}
               </td>
             </tr>
             <tr>
               <td colSpan={4} className="text-right">
                 Dostava:
               </td>
-              <td className="text-center">{formatCurrency(5)}</td>
+              <td className="text-center">{formatCurrency(deliveryFee)}</td>
             </tr>
             <tr className="font-bold border-t-[1px]">
               <td colSpan={4} className="text-right">
                 Ukupno:
               </td>
               <td className="text-center">
-                {formatCurrency(order?.price! / 100 + 5)}
+                {formatCurrency(order?.price! / 100)}
               </td>
             </tr>
           </tbody>

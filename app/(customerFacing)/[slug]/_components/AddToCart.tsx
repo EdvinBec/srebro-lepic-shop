@@ -5,7 +5,6 @@ import SizePicker from "./SizePicker";
 import { Product } from "@prisma/client";
 import Button from "@/components/Button/Button";
 import { useAppDispatch } from "@/lib/hooks";
-import { saveCurrentOrder } from "@/lib/slices/createOrder";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/lib/CartContext";
@@ -24,26 +23,18 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
   const [size, setSize] = useState<number>(0);
   const [error, setError] = useState("");
 
-  const dispatch = useAppDispatch();
-  const router = useRouter();
   const { toast } = useToast();
   const cart = useContext(CartContext);
   const productQuantity = cart.getProductQuantity(product.id, size);
 
-  const handleBuyNow = (path: string) => {
-    if (availableSizes[0] != 0 && size === 0) {
-      setError("Molim vas odaberite veličinu.");
-      return;
-    }
-
-    dispatch(saveCurrentOrder({ productId: product.id, size: size }));
-
-    router.push(path);
-  };
-
   const handleAddToCart = () => {
     if (availableSizes[0] != 0 && size === 0) {
-      setError("Molim vas odaberite veličinu.");
+      toast({
+        title: "Molim vas odaberite veličinu.",
+        description:
+          "Izaberite veličinu proizvoda kako biste ga dodali u korpu.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -74,12 +65,6 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
       </div>
 
       <div className="flex gap-4">
-        <Button
-          onClick={() => handleBuyNow(`/${id}size${size}/purchase`)}
-          className="mt-2 border-[1px]"
-        >
-          Kupi odmah
-        </Button>
         {productQuantity > 0 ? (
           <>
             <div className="mt-2">

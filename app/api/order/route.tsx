@@ -19,6 +19,10 @@ type Customer = {
 };
 
 const createOrder = async (customer: Customer, data: CartItem[]) => {
+  const deliveryFee = await db.shopSettings.findUnique({
+    where: { id: 1 },
+  });
+
   const cart: CartItem[] = data;
   let totalPrice = 0;
 
@@ -47,15 +51,12 @@ const createOrder = async (customer: Customer, data: CartItem[]) => {
     });
   }
 
-  console.log("Cart Items:", cart);
-  console.log("User ID:", user.id);
-
   // Create the order within a transaction
   await db.$transaction(async (tx) => {
     const order = await tx.order.create({
       data: {
         userId: user.id,
-        price: (totalPrice + 5) * 100,
+        price: (totalPrice + deliveryFee?.deliveryFee!) * 100,
         paymentMethod: "Po pouzeću", // "Cash on delivery
         products: {
           create: cart.map((item: CartItem) => ({

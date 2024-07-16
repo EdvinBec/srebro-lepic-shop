@@ -123,16 +123,27 @@ const ProductForm = ({ className, product }: Props) => {
           />
         </div>
 
-        <input type="hidden" name="sizes" value={selectedSize?.join(",")} />
+        <input
+          type="hidden"
+          name="sizes"
+          multiple
+          value={selectedSize?.join(",")}
+        />
         {error.sizes && <div className="text-destructive">{error.sizes}</div>}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="image">Slika</Label>
-        <Input type="file" id="image" name="image" required={product == null} />
+        <Input
+          type="file"
+          id="image"
+          name="image"
+          multiple
+          required={product == null}
+        />
         {product != null && (
           <Image
-            src={product.image}
+            src={product.image[0]}
             height={200}
             width={200}
             alt="Product Image"

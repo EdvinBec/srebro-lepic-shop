@@ -11,6 +11,7 @@ import Instagram from "@/public/assets/Instagram.svg";
 import Youtube from "@/public/assets/Youtube.svg";
 import TikTok from "@/public/assets/Tiktok.svg";
 import { cn } from "@/lib/utils";
+import { Shell, ShieldQuestion, ShoppingBag } from "lucide-react";
 
 type Props = {
   className?: string;
@@ -21,11 +22,11 @@ const Footer = ({ className }: Props) => {
     <footer
       className={cn(
         className,
-        "bg-accentYellow w-full py-11 text-darkGray print:hidden"
+        "bg-accentYellow w-full py-4 md:py-10 text-darkGray print:hidden"
       )}
     >
       <MaxWidthWrapper className="flex flex-col gap-8 md:flex-row justify-between">
-        <div className="md:w-1/3">
+        <div className="md:w-2/3">
           <div className="hidden md:block">
             <Image
               src={Logo}
@@ -36,52 +37,68 @@ const Footer = ({ className }: Props) => {
               Sa zadovoljstvom ispunjavamo vaše želje.
             </Label>
           </div>
-          <div className="mt-0 md:mt-12 flex flex-col items-center md:block">
-            <h2 className="text-2xl font-medium text-darkGray">
-              Prijavite se na novosti
-            </h2>
-            <p className="text-sm mt-2">
-              Ako želite ostati u skaldu sa našim popustima i akcijama.
-              Prijavite se na naše novosti i budite obavješteni o svemu putem
-              e-maila.
-            </p>
-            <input
-              type="text"
-              placeholder="Unesite svoj email"
-              className="rounded-none bg-accentYellow border-b-[1px] border-black py-1
-                placeholder:text-darkGray placeholder:text-sm focus:outline-none mt-7"
-            />
-            <Button className="block mt-4" variant="secondary">
-              Prijavi se
-            </Button>
+          <div className="flex gap-12 md:mt-12">
+            <div className="mt-8">
+              <div className="flex items-center gap-2">
+                <Shell />
+                <span className="text-2xl uppercase tracking-wide font-black font-boska">
+                  Naša obećanja
+                </span>
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Besplatna dostava iznad 49,00 KM
+                </Link>
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Dostupni načini plaćanja
+                </Link>
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Politika povrata
+                </Link>
+              </div>
+            </div>
+            <div className="mt-8">
+              <div className="flex items-center gap-2">
+                <ShieldQuestion />
+                <span className="text-2xl uppercase tracking-wide font-black font-boska">
+                  Pomoć i kontakt
+                </span>
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Informacije o dostavi
+                </Link>
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Nadji pravu veličinu
+                </Link>
+                <Link
+                  className="text-sm font-semibold hover:underline text-nowrap"
+                  href="#"
+                >
+                  Kontaktne informacije
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="flex flex-col md:justify-between md:items-end">
           <div className="flex md:gap-24 justify-between">
-            <div className="hidden md:flex flex-col">
-              <Label className="text-sm text-darkGray">Navigacija</Label>
-              <ul className="flex flex-col gap-5 mt-7">
-                <Link
-                  href="/kategorije"
-                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
-                >
-                  Kategorije
-                </Link>
-                <Link
-                  href="/kategorije"
-                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
-                >
-                  O nama
-                </Link>
-                <Link
-                  href="/kategorije"
-                  className=" text-[18px] font-medium hover:opacity-75 transition-all duration-150"
-                >
-                  Kontakt
-                </Link>
-              </ul>
-            </div>
             <div className="flex flex-col justify-between md:hidden">
               <div>
                 <Image
@@ -93,7 +110,7 @@ const Footer = ({ className }: Props) => {
                   Sa zadovoljstvom ispunjavamo <br /> vaše želje.
                 </Label>
               </div>
-              <div className="flex flex-col md:flex-row gap-2">
+              <div className="flex gap-2">
                 <Link
                   href="privacy-policy"
                   className="text-sm opacity-90 hover:opacity-75 transition-all duration-150"

@@ -7,7 +7,7 @@ import React, { useContext, useState } from "react";
 import { formatCurrency } from "@/lib/formatters";
 import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
-import { CartContext, CartItem } from "@/lib/CartContext";
+import { CartContext } from "@/lib/CartContext";
 import { createCheckoutSession } from "@/hooks/useCart";
 import { CreditCard, Truck } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -15,9 +15,10 @@ import { useToast } from "@/components/ui/use-toast";
 type Props = {
   products: Product[];
   className?: string;
+  deliveryFee: number;
 };
 
-const Checkout = ({ products, className }: Props) => {
+const Checkout = ({ products, className, deliveryFee }: Props) => {
   const cart = useContext(CartContext);
   const { toast } = useToast();
   const router = useRouter();
@@ -35,7 +36,9 @@ const Checkout = ({ products, className }: Props) => {
         <div className="flex items-center mt-8 justify-between">
           <Label className="text-sm">Dostava</Label>
           <span className="text-sm">
-            {cart.items.length == 0 ? formatCurrency(0) : formatCurrency(5)}
+            {cart.items.length == 0
+              ? formatCurrency(0)
+              : formatCurrency(deliveryFee)}
           </span>
         </div>
       </div>
@@ -44,7 +47,7 @@ const Checkout = ({ products, className }: Props) => {
         <span className="text-sm">
           {cart.items.length == 0
             ? formatCurrency(cart.getTotalCost())
-            : formatCurrency(cart.getTotalCost() + 5)}
+            : formatCurrency(cart.getTotalCost() + deliveryFee)}
         </span>
       </div>
       <div className="flex flex-col gap-2 mt-4">
@@ -81,6 +84,14 @@ const Checkout = ({ products, className }: Props) => {
             }
             createCheckoutSession(cart.items, products);
           } else {
+            if (cart.items.length <= 0) {
+              toast({
+                title: "Korpa je prazna!",
+                description: "Molim vas dodajte nešto u korpu",
+                variant: "destructive",
+              });
+              return;
+            }
             router.push("/cart/delivery");
           }
         }}

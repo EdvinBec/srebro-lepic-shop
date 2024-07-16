@@ -7,7 +7,7 @@ type UntransformedCartItem = {
   price: number;
   description: string;
   name: string;
-  image: string;
+  images: string[];
   size: number;
   productId: string;
 };
@@ -24,7 +24,7 @@ export const transformCartItems = (items: CartItem[], products: Product[]) => {
       price: product.priceInCents,
       description: product.description,
       name: product.name,
-      image: product.image,
+      images: product.image, // Ensure this is an array of strings
       size: item.size, // Add size from CartItem
       productId: product.id, // Add productId from Product
     });
@@ -33,11 +33,11 @@ export const transformCartItems = (items: CartItem[], products: Product[]) => {
   return cart.map((item) => ({
     price_data: {
       currency: "bam",
-      unit_amount: Math.floor(item.price) * 100,
+      unit_amount: Math.round(item.price * 100),
       product_data: {
         name: item.name,
         description: item.description,
-        images: [item.image],
+        images: item.images, // Ensure this is an array of strings
       },
     },
     quantity: item.quantity,

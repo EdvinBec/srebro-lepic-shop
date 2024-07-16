@@ -17,17 +17,25 @@ import { cn } from "@/lib/utils";
 type Props = {
   category?: string;
   className?: string;
+  featured?: boolean;
 };
 
-const ProductsCarousel = async ({ category, className }: Props) => {
+const ProductsCarousel = async ({ category, className, featured }: Props) => {
   const Products = await db.product.findMany({
     where: { isAvailabileForPurchase: true },
   });
 
-  const filteredProducts =
+  let filteredProducts =
     (category &&
       Products.filter((item: Product) => item.category === category)) ||
     Products;
+
+  if (featured) {
+    filteredProducts = filteredProducts.filter(
+      (item: Product) => item.isFeatured
+    );
+  }
+
   return (
     <Carousel
       className={cn("w-full max-w-[90%] mx-auto mt-4 text-darkGray", className)}
@@ -39,10 +47,10 @@ const ProductsCarousel = async ({ category, className }: Props) => {
               key={itemIdx}
               className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center hover:opacity-85 hover:shadow-md transition-all duration-200"
             >
-              <Link href={item.id}>
+              <Link href={`/${item.id}`}>
                 <div className="bg-white p-5 rounded-[1px] shadow-sm ">
                   <Image
-                    src={item.image}
+                    src={item.image[0]}
                     alt={item.name}
                     height={200}
                     width={300}
@@ -50,7 +58,22 @@ const ProductsCarousel = async ({ category, className }: Props) => {
                   />
                   <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
                   <h3 className="text-sm mt-1.5">{item.name}</h3>
-                  <p className=" mt-2.5">{formatCurrency(item.priceInCents)}</p>
+                  <div className="flex items-center gap-2 mt-2.5">
+                    <p
+                      className={`${
+                        item.oldPrice != 0 && "text-destructive font-bold"
+                      }`}
+                    >
+                      {formatCurrency(item.priceInCents)}
+                    </p>
+                    <p
+                      className={`mt-1  ${
+                        item.oldPrice != 0 ? "text-xs block" : "hidden"
+                      }`}
+                    >
+                      {formatCurrency(item.oldPrice)}
+                    </p>
+                  </div>
                 </div>
               </Link>
             </CarouselItem>

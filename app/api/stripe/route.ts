@@ -1,3 +1,4 @@
+import db from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
@@ -5,6 +6,10 @@ import { v4 as uuidv4 } from "uuid";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: NextRequest) {
+  const deliveryFee = await db.shopSettings.findUnique({
+    where: { id: 1 },
+  });
+
   if (req.method !== "POST") {
     return new NextResponse("Method Not Allowed", {
       status: 405,
@@ -33,7 +38,10 @@ export async function POST(req: NextRequest) {
         {
           shipping_rate_data: {
             type: "fixed_amount",
-            fixed_amount: { amount: 500, currency: "bam" },
+            fixed_amount: {
+              amount: deliveryFee?.deliveryFee! * 100,
+              currency: "bam",
+            },
             display_name: "Free shipping",
             delivery_estimate: {
               minimum: { unit: "business_day", value: 5 },
@@ -45,7 +53,7 @@ export async function POST(req: NextRequest) {
       customer: customer.id,
       line_items: transformedItems,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/success/{CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
       shipping_address_collection: {
         allowed_countries: ["BA", "HR", "RS", "ME", "MK", "SI", "BG", "AL"],

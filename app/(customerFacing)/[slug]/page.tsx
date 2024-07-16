@@ -9,6 +9,7 @@ import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { Label } from "@/components/ui/label";
 import AddToCart from "./_components/AddToCart";
 import { Truck } from "lucide-react";
+import ImagePicker from "./_components/ImagePicker";
 
 type Props = {
   params: {
@@ -23,49 +24,39 @@ const page = async ({ params: { slug } }: Props) => {
     },
   });
 
+  const images = product?.image;
+
+  console.log(product);
+
   return (
     <MaxWidthWrapper className=" text-darkGray py-8">
       <div className="flex flex-col md:flex-row gap-10">
-        <div className="flex gap-5">
-          <div className="xl:flex flex-col gap-4 hidden ">
-            <Image
-              alt={product?.name!}
-              src={product?.image!}
-              width={150}
-              height={90}
-            />
-            <Image
-              alt={product?.name!}
-              src={product?.image!}
-              width={150}
-              height={90}
-            />
-            <Image
-              alt={product?.name!}
-              src={product?.image!}
-              width={150}
-              height={90}
-            />
-          </div>
-          <Image
-            alt={product?.name!}
-            src={product?.image!}
-            width={600}
-            height={500}
-            className="max-h-[500px]"
-          />
-        </div>
+        <ImagePicker productName={product?.name!} imagess={images!} />
         <div className="flex flex-col justify-between w-full md:max-w-96">
           <div>
             <Image src={Logo} alt="Logo" />
             <h2 className="mt-2 font-semibold text-2xl">{product?.name}</h2>
 
-            <div className="mt-5 flex items-end gap-2">
-              <Label className="text-xl font-normal">
-                {formatCurrency(product?.priceInCents!)}
-              </Label>
-              <Label className="text-sm opacity-80 font-normal mb-[2px]">
-                PDV je uključen
+            <div className="mt-5 ">
+              <div className="flex items-end gap-2">
+                <Label
+                  className={`text-xl font-normal ${
+                    product?.oldPrice != 0 && "text-destructive font-bold"
+                  }`}
+                >
+                  {formatCurrency(product?.priceInCents!)}
+                </Label>
+                <Label className="text-sm opacity-80 font-normal mb-[2px]">
+                  PDV je uključen
+                </Label>
+              </div>
+              <Label
+                className={`opacity-70 text-sm ${
+                  product?.oldPrice === 0 && "hidden"
+                }`}
+              >
+                <span>Orginalna cijena: </span>
+                {formatCurrency(product?.oldPrice!)}
               </Label>
             </div>
           </div>
@@ -106,7 +97,7 @@ const page = async ({ params: { slug } }: Props) => {
       </div>
       <div className="mt-10">
         <h2 className="font-bold text-2xl">Opis proizvoda</h2>
-        <p className="text-sm">{product?.description}</p>
+        <p className="text-sm md:w-2/3">{product?.description}</p>
       </div>
     </MaxWidthWrapper>
   );

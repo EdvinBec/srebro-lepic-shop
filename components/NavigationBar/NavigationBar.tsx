@@ -9,8 +9,6 @@ import Link from "next/link";
 import CartButton from "../Button/CartButton";
 import { NavLink } from "@/types";
 import DropdownButton from "../Button/DropdownButton";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
 import { CartContext } from "@/lib/CartContext";
 
 type Props = {};
@@ -36,12 +34,8 @@ const DropdownLinks: NavLink[] = [
     href: "/kategorija/satovi",
   },
   {
-    label: "Nakit po narudžbi",
-    href: "/po-narudzbi",
-  },
-  {
-    label: "Nakit sa porukom",
-    href: "/sa-porukom",
+    label: "Nakit sa posvetom",
+    href: "/kategorija/nakit-sa-posvetom",
   },
 ];
 
@@ -53,7 +47,7 @@ const NavigationBar = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <MaxWidthWrapper className="px-0 md:px-2 lg:px-20 print:hidden">
+    <MaxWidthWrapper className="px-0 print:hidden">
       <nav className="flex justify-between items-center py-4 pl-8 pr-4 md:px-0 print:hidden">
         <ul className="gap-6 hidden md:flex w-1/3">
           {NavLinks.map((item: NavLink, itemIdx: number) => {

@@ -37,3 +37,14 @@ export type OrderList = {
   products: OrderItem[];
   user: User;
 };
+
+export type DeliveryFormData = {
+  name: string;
+  phone: string;
+  address: {
+    line1: string;
+    city: string;
+    country: string;
+    postal_code: string;
+  };
+};
