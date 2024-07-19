@@ -1,12 +1,10 @@
 // app/api/delivery-order/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import db from "@/db/db";
+import { PrismaClient } from "@prisma/client";
 import { CartItem } from "@/lib/CartContext";
 
-const prisma = new PrismaClient();
+const db = new PrismaClient();
 
 type Customer = {
   email: string;
@@ -19,10 +17,15 @@ type Customer = {
 };
 
 const createOrder = async (customer: Customer, data: CartItem[]) => {
-  const deliveryFee = await db.shopSettings.findUnique({
+  const deliveryFeeRecord = await db.shopSettings.findUnique({
     where: { id: 1 },
   });
 
+  if (!deliveryFeeRecord) {
+    throw new Error("Delivery fee settings not found");
+  }
+
+  const deliveryFee = deliveryFeeRecord.deliveryFee;
   const cart: CartItem[] = data;
   let totalPrice = 0;
 
@@ -32,7 +35,7 @@ const createOrder = async (customer: Customer, data: CartItem[]) => {
 
   let user = await db.user.findUnique({
     where: {
-      email: customer.email as string,
+      email: customer.email,
     },
   });
 
@@ -40,24 +43,23 @@ const createOrder = async (customer: Customer, data: CartItem[]) => {
     user = await db.user.create({
       data: {
         id: uuidv4(),
-        email: customer.email!,
-        zip: customer.zip!,
-        address: customer.address!,
-        phone: customer.phone!,
-        country: customer.country!,
-        city: customer.city!,
-        fullName: customer.fullName!,
+        email: customer.email,
+        zip: customer.zip,
+        address: customer.address,
+        phone: customer.phone,
+        country: customer.country,
+        city: customer.city,
+        fullName: customer.fullName,
       },
     });
   }
 
-  // Create the order within a transaction
   await db.$transaction(async (tx) => {
     const order = await tx.order.create({
       data: {
         userId: user.id,
-        price: (totalPrice + deliveryFee?.deliveryFee!) * 100,
-        paymentMethod: "Po pouzeću", // "Cash on delivery
+        price: (totalPrice + deliveryFee) * 100,
+        paymentMethod: "Po pouzeću", // "Cash on delivery"
         products: {
           create: cart.map((item: CartItem) => ({
             productId: item.id,
@@ -87,7 +89,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    createOrder(customer, cart);
+    await createOrder(customer, cart);
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -96,5 +98,7 @@ export async function POST(req: NextRequest) {
       { error: "Internal Server Error" },
       { status: 500 }
     );
+  } finally {
+    await db.$disconnect();
   }
 }

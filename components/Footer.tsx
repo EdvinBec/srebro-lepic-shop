@@ -37,7 +37,7 @@ const Footer = ({ className }: Props) => {
               Sa zadovoljstvom ispunjavamo vaše želje.
             </Label>
           </div>
-          <div className="flex gap-12 md:mt-12">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-12 md:mt-12 mb-4 md:mb-0">
             <div className="mt-8">
               <div className="flex items-center gap-2">
                 <Shell />

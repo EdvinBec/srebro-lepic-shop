@@ -1,21 +1,11 @@
-"use client";
-
 import Heading from "@/components/Heading";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductsCarousel from "@/components/ProductsCarousel";
-import { CartContext } from "@/lib/CartContext";
 import { CheckCircle2 } from "lucide-react";
-import React, { useContext, useEffect } from "react";
 
 type Props = {};
 
 const Page = ({}: Props) => {
-  const cart = useContext(CartContext);
-
-  useEffect(() => {
-    if (cart.items.length > 0) cart.clearCart();
-  });
-
   return (
     <MaxWidthWrapper>
       <div className="mt-4 border-[1px] p-2 py-6">

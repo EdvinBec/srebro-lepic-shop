@@ -113,6 +113,7 @@ const Checkout = ({ products, deliveryFee }: Props) => {
         });
 
         if (response.status === 200) {
+          cart.clearCart();
           router.push("/cart/success");
         } else {
           throw new Error("Order submission failed");
@@ -127,6 +128,7 @@ const Checkout = ({ products, deliveryFee }: Props) => {
         setIsLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [cart.items, data, email, router, toast]
   );
 
