@@ -137,7 +137,6 @@ export const AddDiscountDrawer = ({
             onChange={(e) => setNewPrice(Number(e.target.value))}
           />
         </div>
-
         <DrawerFooter>
           <Button
             variant="secondary"

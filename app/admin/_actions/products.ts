@@ -68,28 +68,43 @@ export const updateProduct = async (
     return notFound();
   }
 
-  const objectNames: string[] = [];
-  product.image.forEach((image) => {
-    const objectName = getObjectNameFromUrl(image);
-    objectNames.push(objectName);
-  });
+  let imagePaths: string[] = [];
+  const newImages: File[] = [];
 
-  const imagePaths: string[] = [];
-  objectNames.forEach(async (objectName) => {
-    await minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName);
-  });
-
-  const uploadPromises = Array.from(formData.values()).map(async (value) => {
+  Array.from(formData.values()).map((value) => {
     if (value instanceof File) {
-      const imagePath = await uploadFileToMinio(
-        process.env.MINIO_IMAGE_BUCKET!,
-        value
-      );
-      imagePaths.push(imagePath);
+      newImages.push(value);
     }
   });
 
-  await Promise.all(uploadPromises);
+  console.log(newImages);
+
+  if (newImages.length > 1) {
+    // Remove old images only if new images are uploaded
+    const objectNames = product.image.map((image) =>
+      getObjectNameFromUrl(image)
+    );
+    await Promise.all(
+      objectNames.map((objectName) =>
+        minioClient.removeObject(process.env.MINIO_IMAGE_BUCKET!, objectName)
+      )
+    );
+
+    // Upload new images
+    const uploadPromises = newImages.map(async (file) => {
+      if (file instanceof File) {
+        const imagePath = await uploadFileToMinio(
+          process.env.MINIO_IMAGE_BUCKET!,
+          file
+        );
+        imagePaths.push(imagePath);
+      }
+    });
+
+    await Promise.all(uploadPromises);
+  } else {
+    imagePaths = product.image;
+  }
 
   await db.product.update({
     where: { id },
@@ -105,8 +120,10 @@ export const updateProduct = async (
   });
 
   revalidatePath(`/products`);
+  revalidatePath(`/products/${id}`);
+  revalidatePath(`/admin/products`);
   revalidatePath("/");
-  redirect("/admin/products");
+  revalidatePath(`/kategorija`);
 };
 
 // Function to add new product
