@@ -66,8 +66,10 @@ const page = async () => {
 
 export default page;
 
-const ProductsTable = async () => {
+export const ProductsTable = async ({ category }: { category?: string }) => {
+  const filter = category ? { category } : {};
   const products = await db.product.findMany({
+    where: filter,
     select: {
       id: true,
       name: true,

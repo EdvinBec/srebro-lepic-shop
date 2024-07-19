@@ -2,9 +2,9 @@ import Heading from "@/components/Heading";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import React from "react";
 import Sidebar from "../../_components/Sidebar";
-import { ProdcutsTable } from "../../page";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
+import { ProductsTable } from "../../page";
 
 type Props = {
   params: {
@@ -26,7 +26,7 @@ const page = ({ params: { slug } }: Props) => {
         </div>
         <div className="mt-12 flex gap-8">
           <Sidebar slug={slug} />
-          <ProdcutsTable category={slug} />
+          <ProductsTable category={slug} />
         </div>
       </MaxWidthWrapper>
     </div>
