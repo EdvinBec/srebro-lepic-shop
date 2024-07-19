@@ -5,15 +5,13 @@ import Link from "next/link";
 
 type Props = {
   itemsCount: number;
-  onClick?: () => void;
 };
 
-const CartButton = ({ itemsCount, onClick }: Props) => {
+const CartButton = ({ itemsCount }: Props) => {
   return (
     <Link
       href="/cart"
       className="flex p-0 mt-3.5 hover:opacity-75 transition-all duration-150"
-      onClick={onClick}
     >
       <Image src={Cart} alt="cart" />
       <span className="px-2 mt-3 py-1 rounded-full text-white text-[10px] bg-darkGray">

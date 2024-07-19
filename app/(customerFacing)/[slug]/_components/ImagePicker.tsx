@@ -31,6 +31,7 @@ const ImagePicker = ({ imagess, productName }: Props) => {
               className="relative w-24 h-24 flex items-center overflow-hidden"
             >
               <Image
+                loading="lazy"
                 alt={productName}
                 src={image}
                 layout="responsive"
@@ -43,8 +44,14 @@ const ImagePicker = ({ imagess, productName }: Props) => {
           ))}
         </div>
       )}
-      <div className="xl:w-4/5 h-[500px] flex justify-center items-center overflow-hidden">
-        <Image alt={productName} src={images[0]} width={600} height={500} />
+      <div className="xl:w-4/5 flex justify-center items-center overflow-hidden">
+        <Image
+          alt={productName}
+          src={images[0]}
+          width={600}
+          height={500}
+          loading="lazy"
+        />
       </div>
     </div>
   );

@@ -57,8 +57,15 @@ const ProductsCarousel = async ({ category, className, featured }: Props) => {
                   height={200}
                   width={300}
                   className="object-cover rounded-[1px] h-[200px] w-[300px]"
+                  loading="lazy"
                 />
-                <Image src={Logo} alt="logo" height={17} className="mt-2.5" />
+                <Image
+                  src={Logo}
+                  alt="logo"
+                  height={17}
+                  className="mt-2.5"
+                  loading="lazy"
+                />
                 <h3 className="text-sm mt-1.5">{item.name}</h3>
                 <div className="flex items-center gap-2 mt-2.5">
                   <p
@@ -68,7 +75,7 @@ const ProductsCarousel = async ({ category, className, featured }: Props) => {
                   >
                     {formatCurrency(item.priceInCents)}
                   </p>
-                  {item.oldPrice && (
+                  {item.oldPrice > 0 && (
                     <p className="mt-1 text-xs block">
                       {formatCurrency(item.oldPrice)}
                     </p>
