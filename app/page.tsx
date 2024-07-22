@@ -4,18 +4,10 @@ import Nadia from "@/public/assets/Nadia.jpg";
 import Pandora from "@/public/assets/Pandora.svg";
 import DanielKlein from "@/public/assets/DanielKlein.svg";
 import Clock from "@/public/assets/Sat.jpg";
-import dynamic from "next/dynamic";
-
-// Dynamic imports for heavy components
-const HeroSection = dynamic(() => import("@/components/HeroSection"), {
-  ssr: false,
-});
-const ProductsCarousel = dynamic(
-  () => import("@/components/ProductsCarousel"),
-  { ssr: false }
-);
-const Article = dynamic(() => import("@/components/Article"), { ssr: false });
-const ShowRow = dynamic(() => import("@/components/ShowRow"), { ssr: false });
+import HeroSection from "@/components/HeroSection";
+import ProductsCarousel from "@/components/ProductsCarousel";
+import Article from "@/components/Article";
+import ShowRow from "@/components/ShowRow";
 
 export default function Home() {
   return (

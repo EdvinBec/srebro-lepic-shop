@@ -1,15 +1,11 @@
-"use client";
-
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import MaxWidthWrapper from "../MaxWidthWrapper";
-import Logo from "@/public/assets/logo.svg";
-import HamburgerMenu from "@/public/assets/Hamburger.svg";
 import Image from "next/image";
 import Link from "next/link";
-import CartButton from "../Button/CartButton";
 import { NavLink } from "@/types";
-import DropdownButton from "../Button/DropdownButton";
-import { CartContext } from "@/lib/CartContext";
+import { Icons } from "../Icons";
+import NavItems from "./NavItems";
+import Cart from "./Cart";
 
 type Props = {};
 
@@ -40,91 +36,36 @@ const DropdownLinks: NavLink[] = [
 ];
 
 const NavigationBar = (props: Props) => {
-  const cart = useContext(CartContext);
-
-  const productsCount = cart.items.length;
-
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <MaxWidthWrapper className="px-0 print:hidden">
-      <nav className="flex justify-between items-center py-4 pl-8 pr-4 md:px-0 print:hidden">
-        <ul className="gap-6 hidden md:flex w-1/3">
-          {NavLinks.map((item: NavLink, itemIdx: number) => {
-            return (
-              <li
-                key={itemIdx}
-                className="hover:opacity-90 transition-all ease-in-out duration-150"
-              >
-                <div className="group inline-block">
-                  <Link
-                    className="text-sm text-darkGray relative pb-1"
-                    href={`/kategorija${item.href}`}
-                  >
-                    {item.label}
-                    <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-current transition-all duration-500 group-hover:w-full group-hover:left-0"></span>
-                  </Link>
+    <nav className="bg-white sticky z-50 top-0 inset-x-0 h-16">
+      <header className="relative bg-white">
+        <MaxWidthWrapper>
+          <div className="border-b border-gray-200">
+            <div className="flex h-16 items-center">
+              {/* TODO: Mobile navigation */}
+
+              <div className="ml-4 flex lg:ml-0">
+                <Link href="/">
+                  <Icons.logo />
+                </Link>
+              </div>
+
+              <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
+                <NavItems />
+              </div>
+
+              <div className="ml-auto flex items-center">
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-y-6">
+                  <div className="flow-root ml-4 lg:ml-6">
+                    <Cart />
+                  </div>
                 </div>
-              </li>
-            );
-          })}
-          <DropdownButton DropdownLinks={DropdownLinks} label="Više" />
-        </ul>
-        <Link href="/">
-          <Image src={Logo} alt="logo" />
-        </Link>
-        <div className="flex justify-end items-center gap-2 w-1/3">
-          <button
-            className="md:hidden"
-            onClick={() => {
-              if (isOpen) {
-                setIsOpen(false);
-              } else setIsOpen(true);
-            }}
-          >
-            <Image src={HamburgerMenu} alt="hamburger" />
-          </button>
-          <CartButton itemsCount={productsCount} />
-        </div>
-      </nav>
-      <div className="px-4 md:hidden mb-4">
-        <ul
-          className={`flex flex-col gap-2 md:hidden border-y-[1px] py-4 ${
-            isOpen ? "block" : "hidden"
-          }`}
-        >
-          {NavLinks.map((item: NavLink, itemIdx: number) => {
-            return (
-              <li
-                key={itemIdx}
-                className="hover:opacity-75 transition-all ease-in-out duration-150 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                <Link
-                  className="text-sm text-darkGray"
-                  href={`/kategorija${item.href}`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-          {DropdownLinks.map((item: NavLink, itemIdx: number) => {
-            return (
-              <li
-                key={itemIdx}
-                className="hover:opacity-75 transition-all ease-in-out duration-150 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                <Link className="text-sm text-darkGray" href={`${item.href}`}>
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </MaxWidthWrapper>
+              </div>
+            </div>
+          </div>
+        </MaxWidthWrapper>
+      </header>
+    </nav>
   );
 };
 

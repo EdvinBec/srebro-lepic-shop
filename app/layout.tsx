@@ -9,6 +9,7 @@ import StoreProvider from "@/components/provider/StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
 import CartProvider from "@/lib/CartContext";
 import db from "@/db/db";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,22 +45,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const shopSettings = await db.shopSettings.findUnique({
-    where: { id: 1 },
-  });
-
   return (
     <html lang="en" className={`${Boska.variable} font-boska`}>
-      <body className={inter.className}>
-        <CartProvider>
-          <StoreProvider>
-            <AttentionRow label={shopSettings?.attentionMessage!} />
-            <NavigationBar />
-            {children}
-            <Toaster />
-            <Footer className="mt-12" />
-          </StoreProvider>
-        </CartProvider>
+      <body
+        className={cn("relative h-full font-sans antialiased", inter.className)}
+      >
+        <main className="realtive flex flex-col min-h-screen">
+          <div className="flex-grow flex-1">
+            <CartProvider>
+              <AttentionRow />
+              <NavigationBar />
+              {children}
+              <Toaster />
+              <Footer className="mt-12" />
+            </CartProvider>
+          </div>
+        </main>
       </body>
     </html>
   );
