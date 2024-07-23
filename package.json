@@ -45,6 +45,8 @@
     "resend": "^3.3.0",
     "sharp": "^0.33.4",
     "stripe": "^15.12.0",
+    "swipe": "^1.7.7",
+    "swiper": "^11.1.6",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",

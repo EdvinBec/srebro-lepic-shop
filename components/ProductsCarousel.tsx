@@ -6,12 +6,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import Logo from "@/public/assets/logo.svg";
-import Link from "next/link";
-import { formatCurrency } from "@/lib/formatters";
 import db from "@/db/db";
 import { cn } from "@/lib/utils";
+import ProductListing from "./ProductListing";
 
 type Props = {
   category?: string;
@@ -19,9 +16,33 @@ type Props = {
   featured?: boolean;
 };
 
+type CarouselProductFilter = {
+  isAvailabileForPurchase: boolean;
+  category?: string;
+  isFeatured?: boolean;
+};
+
 const ProductsCarousel = async ({ category, className, featured }: Props) => {
-  const Products = await db.product.findMany({
-    where: { isAvailabileForPurchase: true },
+  let filterCondition: CarouselProductFilter = {
+    isAvailabileForPurchase: true,
+  };
+
+  if (category) {
+    filterCondition = {
+      ...filterCondition,
+      category,
+    };
+  }
+
+  if (featured) {
+    filterCondition = {
+      ...filterCondition,
+      isFeatured: true,
+    };
+  }
+
+  const products = await db.product.findMany({
+    where: filterCondition,
     select: {
       id: true,
       category: true,
@@ -33,56 +54,17 @@ const ProductsCarousel = async ({ category, className, featured }: Props) => {
     },
   });
 
-  const filteredProducts = Products.filter((item) => {
-    if (category && item.category !== category) return false;
-    if (featured && !item.isFeatured) return false;
-    return true;
-  });
-
   return (
     <Carousel
-      className={cn("w-full max-w-[90%] mx-auto mt-4 text-darkGray", className)}
+      className={cn("w-full max-w-4xl mx-auto mt-4 text-darkGray", className)}
     >
       <CarouselContent>
-        {filteredProducts.map((item) => (
+        {products.map((item, i) => (
           <CarouselItem
             key={item.id}
-            className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center hover:opacity-85 hover:shadow-md transition-all duration-200"
+            className="md:basis-1/2 lg:basis-1/3 md:block flex justify-center"
           >
-            <Link href={`/${item.id}`}>
-              <div className="bg-white p-5 rounded-[1px] shadow-sm">
-                <Image
-                  src={item.image[0]}
-                  alt={item.name}
-                  height={200}
-                  width={300}
-                  className="object-cover rounded-[1px] h-[200px] w-[300px]"
-                  loading="lazy"
-                />
-                <Image
-                  src={Logo}
-                  alt="logo"
-                  height={17}
-                  className="mt-2.5"
-                  loading="lazy"
-                />
-                <h3 className="text-sm mt-1.5">{item.name}</h3>
-                <div className="flex items-center gap-2 mt-2.5">
-                  <p
-                    className={`${
-                      item.oldPrice ? "text-destructive font-bold" : ""
-                    }`}
-                  >
-                    {formatCurrency(item.priceInCents)}
-                  </p>
-                  {item.oldPrice > 0 && (
-                    <p className="mt-1 text-xs block">
-                      {formatCurrency(item.oldPrice)}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </Link>
+            <ProductListing index={i} product={item} />
           </CarouselItem>
         ))}
       </CarouselContent>

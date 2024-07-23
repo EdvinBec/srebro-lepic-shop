@@ -8,6 +8,7 @@ import HeroSection from "@/components/HeroSection";
 import ProductsCarousel from "@/components/ProductsCarousel";
 import Article from "@/components/Article";
 import ShowRow from "@/components/ShowRow";
+import ProductReel from "@/components/ProductReel";
 
 export default function Home() {
   return (
@@ -42,20 +43,9 @@ export default function Home() {
       </MaxWidthWrapper>
       <ShowRow image={Pandora} className="my-8 md:my-12" />
       <MaxWidthWrapper>
-        <section>
-          <div>
-            <Heading side="left" className="mt-10 md:mt-16">
-              Prstenje
-            </Heading>
-            <ProductsCarousel category="prstenje" />
-          </div>
-          <div>
-            <Heading side="left" className="mt-10 md:mt-16">
-              Ogrlice
-            </Heading>
-            <ProductsCarousel category="ogrlice" />
-          </div>
-        </section>
+        <ProductReel category="prstenje" title="Prstenje" href="/prstenje" />
+
+        <ProductReel category="ogrlice" title="Ogrlice" href="/ogrlice" />
       </MaxWidthWrapper>
       <ShowRow image={DanielKlein} className="my-8 md:my-12" />
       <MaxWidthWrapper>
