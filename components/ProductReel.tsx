@@ -10,6 +10,7 @@ type Props = {
   href?: string;
   category?: string;
   isFeatured?: boolean;
+  limit?: number;
 };
 
 type ReelProductFilter = {
@@ -24,6 +25,7 @@ const ProductReel = async ({
   href,
   category,
   isFeatured,
+  limit,
 }: Props) => {
   let filterCondition: ReelProductFilter = {
     isAvailabileForPurchase: true,
@@ -44,7 +46,7 @@ const ProductReel = async ({
   }
 
   const products = await db.product.findMany({
-    take: 4,
+    take: limit || 4,
     where: filterCondition,
     select: {
       id: true,
@@ -69,13 +71,15 @@ const ProductReel = async ({
             </div>
           ) : null}
           {subtitle ? (
-            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+            <p className="-mt-2 md:hidden text-sm text-muted-foreground">
+              {subtitle}
+            </p>
           ) : null}
         </div>
 
         {href ? (
           <Link
-            href={`kategorija${href}`}
+            href={`/kategorija${href}`}
             className="hidden md:block text-sm text-yellow-600 hover:text-yellow-500"
           >
             Pogledajte cijelu kolekciju <span aria-hidden="true">&rarr;</span>

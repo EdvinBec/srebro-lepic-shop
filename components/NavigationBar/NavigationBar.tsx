@@ -5,7 +5,7 @@ import Link from "next/link";
 import { NavLink } from "@/types";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";
-import Cart from "./Cart";
+import Cart from "../Cart";
 
 type Props = {};
 

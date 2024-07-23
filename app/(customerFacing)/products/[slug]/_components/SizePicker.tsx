@@ -32,7 +32,7 @@ const SizePicker = ({
   return (
     <div className={className}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild className="w-full">
           <Button
             variant="outline"
             className="rounded-[1px] flex gap-2 items-center focus:outline-none outline-none"
@@ -41,7 +41,7 @@ const SizePicker = ({
             <ChevronDown strokeWidth={1} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56 rounded-[1px]">
+        <DropdownMenuContent className="rounded-[1px]">
           <DropdownMenuGroup>
             {availableSizes.map((item: number, itemIdx: number) => {
               return (

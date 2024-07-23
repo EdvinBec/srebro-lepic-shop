@@ -8,21 +8,28 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../ui/sheet";
+} from "./ui/sheet";
 import { ShoppingCartIcon } from "lucide-react";
 import { CartContext } from "@/lib/CartContext";
-import { Separator } from "../ui/separator";
+import { Separator } from "./ui/separator";
 import { formatCurrency } from "@/lib/formatters";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { buttonVariants } from "./ui/button";
 import Image from "next/image";
+import { useCart } from "@/hooks/use-cart";
+import { ScrollArea } from "./ui/scroll-area";
+import CartItem from "./CartItem";
 
 type Props = {};
 
 const Cart = (props: Props) => {
-  const cart = useContext(CartContext);
+  const { items } = useCart();
 
-  const itemCount = 0;
+  const itemCount = items.length;
+  const cartTotal = items.reduce(
+    (total, { product }) => total + product.priceInCents,
+    0
+  );
 
   const deliveryFee = 7;
 
@@ -34,7 +41,7 @@ const Cart = (props: Props) => {
           className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
         />
         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-          0
+          {itemCount}
         </span>
       </SheetTrigger>
       <SheetContent className="flex flex-col pr-0 sm:max-w-lg w-full">
@@ -44,8 +51,16 @@ const Cart = (props: Props) => {
         {itemCount > 0 ? (
           <>
             <div className="flex w-full flex-col pr-6">
-              {/*TODO: CART LOGIC*/}
-              cart items
+              <ScrollArea>
+                {items.map(({ product, quantity, size }) => (
+                  <CartItem
+                    product={product}
+                    size={size}
+                    quantity={quantity}
+                    key={product.id}
+                  />
+                ))}
+              </ScrollArea>
             </div>
             <div className="space-y-4 pr-6">
               <Separator />
@@ -56,6 +71,10 @@ const Cart = (props: Props) => {
                     {/* {TODO: Add shipping price} */}
                     {formatCurrency(deliveryFee)}
                   </span>
+                </div>
+                <div className="flex">
+                  <span className="flex-1">Ukupna cijena</span>
+                  <span>{formatCurrency(cartTotal + deliveryFee)}</span>
                 </div>
               </div>
               <SheetFooter>
