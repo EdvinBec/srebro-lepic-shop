@@ -64,3 +64,5 @@ export const PRODUCT_CATEGORIES = [
     ],
   },
 ];
+
+export const deliveryFee = 7;

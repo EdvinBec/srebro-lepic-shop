@@ -4,6 +4,7 @@ import { toggleIsSent } from "@/app/admin/_actions/orders";
 import Button from "@/components/Button/Button";
 import Heading from "@/components/Heading";
 import { Label } from "@/components/ui/label";
+import { deliveryFee } from "@/config";
 import { formatCurrency } from "@/lib/formatters";
 import { Product } from "@prisma/client";
 import { Printer } from "lucide-react";
@@ -29,10 +30,9 @@ type Props = {
     email: string;
   };
   products: combinedType[];
-  deliveryFee: number;
 };
 
-const OrderData = ({ order, user, products, deliveryFee }: Props) => {
+const OrderData = ({ order, user, products }: Props) => {
   return (
     <div className="flex flex-col mt-8">
       <div className="flex justify-between">

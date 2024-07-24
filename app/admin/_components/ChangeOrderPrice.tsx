@@ -17,12 +17,11 @@ import { formatCurrency } from "@/lib/formatters";
 import { Edit } from "lucide-react";
 import React, { useState } from "react";
 import { onSubmit } from "../_actions/settings";
+import { deliveryFee } from "@/config";
 
-type Props = {
-  deliveryFee: number;
-};
+type Props = {};
 
-const ChangeOrderPrice = ({ deliveryFee }: Props) => {
+const ChangeOrderPrice = ({}: Props) => {
   const [amount, setAmount] = useState<number>();
 
   return (

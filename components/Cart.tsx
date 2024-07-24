@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useCart } from "@/hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
 import CartItem from "./CartItem";
+import { deliveryFee } from "@/config";
 
 type Props = {};
 
@@ -30,8 +31,6 @@ const Cart = (props: Props) => {
     (total, { product, quantity }) => total + product.priceInCents * quantity,
     0
   );
-
-  const deliveryFee = 7;
 
   return (
     <Sheet>
@@ -98,7 +97,7 @@ const Cart = (props: Props) => {
             </span>
             <SheetTrigger asChild>
               <Link
-                href="/products"
+                href="/kategorija/ponuda"
                 className={buttonVariants({
                   variant: "link",
                   size: "sm",

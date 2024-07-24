@@ -10,6 +10,7 @@ import { CartContext } from "@/lib/CartContext";
 import { createCheckoutSession } from "@/hooks/useCart";
 import { CreditCard, Truck } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { deliveryFee } from "@/config";
 
 type Product = {
   id: string;
@@ -24,10 +25,9 @@ type Product = {
 type Props = {
   products: Product[];
   className?: string;
-  deliveryFee: number;
 };
 
-const Checkout = ({ products, className, deliveryFee }: Props) => {
+const Checkout = ({ products, className }: Props) => {
   const cart = useContext(CartContext);
   const { toast } = useToast();
   const router = useRouter();

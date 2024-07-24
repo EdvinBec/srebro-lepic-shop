@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { deliveryFee } from "@/config";
 import { CartContext, CartItem } from "@/lib/CartContext";
 import { formatCurrency } from "@/lib/formatters";
 import { DeliveryFormData } from "@/types";
@@ -30,12 +31,11 @@ import React, {
 
 type Props = {
   products: Product[];
-  deliveryFee: number;
 };
 
 type CombinedProductCartItem = Product & CartItem;
 
-const Checkout = ({ products, deliveryFee }: Props) => {
+const Checkout = ({ products }: Props) => {
   const router = useRouter();
   const cart = useContext(CartContext);
   const { toast } = useToast();
@@ -59,7 +59,7 @@ const Checkout = ({ products, deliveryFee }: Props) => {
   const totalCost = useMemo(() => cart.getTotalCost(), [cart]);
   const totalPrice = useMemo(
     () => (cart.items.length === 0 ? totalCost : totalCost + deliveryFee),
-    [cart.items.length, totalCost, deliveryFee]
+    [cart.items.length, totalCost]
   );
 
   const handleSubmit = useCallback(
