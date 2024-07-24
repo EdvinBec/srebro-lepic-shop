@@ -64,7 +64,6 @@ model OrderItem {
 
 model ShopSettings {
   id        Int     @id @default(autoincrement())
-  deliveryFee  Int
   attentionMessage String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
