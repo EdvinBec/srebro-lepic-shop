@@ -9,7 +9,6 @@ import AdminCard from "./_components/AdminCard";
 import OrdersTable from "./_components/OrdersTable";
 import db from "@/db/db";
 
-import ChangeOrderPrice from "./_components/ChangeOrderPrice";
 import AttentionRowChange from "./_components/AttentionRowChange";
 
 export const dynamic = "force-dynamic";
