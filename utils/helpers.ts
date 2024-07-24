@@ -1,15 +1,5 @@
-import { CartItem } from "@/lib/CartContext";
+import { CartItem } from "@/hooks/useCart";
 import { loadStripe } from "@stripe/stripe-js";
-
-type Product = {
-  id: string;
-  name: string;
-  priceInCents: number;
-  oldPrice: number;
-  image: string[];
-  availableSizes: number[];
-  description: string;
-};
 
 type UntransformedCartItem = {
   quantity: number;
@@ -21,21 +11,18 @@ type UntransformedCartItem = {
   productId: string;
 };
 
-export const transformCartItems = (items: CartItem[], products: Product[]) => {
+export const transformCartItems = (items: CartItem[]) => {
   const cart: UntransformedCartItem[] = [];
 
   items.forEach((item) => {
-    const product: Product = products.find(
-      (product) => product.id === item.id
-    )!;
     cart.push({
       quantity: item.quantity,
-      price: product.priceInCents,
-      description: product.description,
-      name: product.name,
-      images: product.image, // Ensure this is an array of strings
+      price: item.product.priceInCents,
+      description: item.product.description,
+      name: item.product.name,
+      images: item.product.image, // Ensure this is an array of strings
       size: item.size, // Add size from CartItem
-      productId: product.id, // Add productId from Product
+      productId: item.product.id, // Add productId from Product
     });
   });
 

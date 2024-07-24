@@ -1,25 +1,19 @@
-import { CartItem } from "@/lib/CartContext";
 import { transformCartItems } from "@/utils/helpers";
+import { Product } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import { CartProduct } from "./use-cart";
 
-type Product = {
-  id: string;
-  name: string;
-  priceInCents: number;
-  oldPrice: number;
-  image: string[];
-  availableSizes: number[];
-  description: string;
+export type CartItem = {
+  product: CartProduct;
+  quantity: number;
+  size: number;
 };
 
-export const createCheckoutSession = async (
-  cartItems: CartItem[],
-  products: Product[]
-) => {
+export const createCheckoutSession = async (cartItems: CartItem[]) => {
   const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-  const transformedItems = transformCartItems(cartItems, products);
+  const transformedItems = transformCartItems(cartItems);
 
   const checkoutSession = await axios.post("/api/stripe", {
     transformedItems,

@@ -2,23 +2,60 @@
 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
-import { PRODUCT_CATEGORIES, deliveryFee } from "@/config";
+import { useToast } from "@/components/ui/use-toast";
+import { deliveryFee } from "@/config";
 import { useCart } from "@/hooks/use-cart";
+import { createCheckoutSession } from "@/hooks/useCart";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { Check, XIcon } from "lucide-react";
+import { Check, CreditCardIcon, TruckIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {};
 
 const Page = ({}: Props) => {
+  const [paymentMethod, setPaymentMethod] = useState<
+    "delivery" | "card" | null
+  >(null);
+
   const { items, removeItem } = useCart();
+  const { toast } = useToast();
+  const router = useRouter();
 
   const cartTotal = items.reduce(
     (total, { product, quantity }) => total + product.priceInCents * quantity,
     0
   );
+
+  const handlePayment = () => {
+    if (items.length <= 0) {
+      toast({
+        title: "Korpa je prazna!",
+        description: "Molim vas dodajte nešto u korpu",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!paymentMethod) {
+      toast({
+        title: "Molim vas izaberite način plaćanja",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (paymentMethod === "delivery") {
+      router.push("/cart/delivery");
+    }
+
+    if (paymentMethod === "card") {
+      createCheckoutSession(items);
+    }
+  };
 
   return (
     <MaxWidthWrapper>
@@ -154,8 +191,48 @@ const Page = ({}: Props) => {
                   {formatCurrency(cartTotal + deliveryFee)}
                 </div>
               </div>
-              <div className="mt-6">
-                <Button className="w-full rounded-[4px]" size="lg">
+              <div className="flex gap-4 mt-4">
+                <button
+                  onClick={() => setPaymentMethod("delivery")}
+                  className={cn(
+                    "w-full flex justify-center py-2 rounded-[4px] gap-2 border border-gray-400",
+                    { "border-2 border-gray-900": paymentMethod === "delivery" }
+                  )}
+                >
+                  <TruckIcon
+                    aria-hidden="true"
+                    className="h-4 w-4 flex-shrink-0"
+                  />
+                  <span className="text-sm text-gray-800 font-medium">
+                    Plaćanje pouzećem
+                  </span>
+                </button>
+                <button
+                  onClick={() => setPaymentMethod("card")}
+                  className={cn(
+                    "w-full flex justify-center py-2 rounded-[4px] gap-2 border border-gray-400",
+                    { "border-2 border-gray-900": paymentMethod === "card" }
+                  )}
+                >
+                  <CreditCardIcon
+                    aria-hidden="true"
+                    className="h-4 w-4 flex-shrink-0"
+                  />
+                  <span className="text-sm text-gray-800 font-medium">
+                    Plaćanje karticom
+                  </span>
+                </button>
+              </div>
+              <div
+                className={cn("mt-6", {
+                  hidden: !paymentMethod,
+                })}
+              >
+                <Button
+                  onClick={() => handlePayment()}
+                  className="w-full rounded-[4px]"
+                  size="lg"
+                >
                   Idi na plaćanje
                 </Button>
               </div>

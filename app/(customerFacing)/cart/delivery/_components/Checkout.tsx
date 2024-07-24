@@ -13,59 +13,47 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { deliveryFee } from "@/config";
-import { CartContext, CartItem } from "@/lib/CartContext";
+import { useCart } from "@/hooks/use-cart";
 import { formatCurrency } from "@/lib/formatters";
 import { DeliveryFormData } from "@/types";
 import { stripePromise } from "@/utils/helpers";
-import { Product } from "@prisma/client";
 import { AddressElement, Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, {
-  FormEvent,
-  useContext,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { FormEvent, useState, useCallback } from "react";
 
-type Props = {
-  products: Product[];
-};
+type Props = {};
 
-type CombinedProductCartItem = Product & CartItem;
-
-const Checkout = ({ products }: Props) => {
+const Checkout = ({}: Props) => {
   const router = useRouter();
-  const cart = useContext(CartContext);
+  const { items, clearCart } = useCart();
   const { toast } = useToast();
 
-  // Filter products that are in the cart
-  const filteredProducts: CombinedProductCartItem[] = useMemo(
-    () =>
-      products.reduce((acc, product) => {
-        const item = cart.items.find((item) => item.id === product.id);
-        if (item) acc.push({ ...product, ...item });
-        return acc;
-      }, [] as CombinedProductCartItem[]),
-    [products, cart.items]
+  const cartTotal = items.reduce(
+    (total, { product, quantity }) => total + product.priceInCents * quantity,
+    0
   );
+
+  const cart: any[] = [];
+
+  items.map(({ product, quantity, size }) => {
+    cart.push({
+      id: product.id,
+      size: size,
+      quantity: quantity,
+      price: product.priceInCents,
+    });
+  });
 
   const [data, setData] = useState<DeliveryFormData>();
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const totalCost = useMemo(() => cart.getTotalCost(), [cart]);
-  const totalPrice = useMemo(
-    () => (cart.items.length === 0 ? totalCost : totalCost + deliveryFee),
-    [cart.items.length, totalCost]
-  );
-
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      if (cart.items.length <= 0) {
+      if (items.length <= 0) {
         toast({
           title: "Korpa je prazna",
           description:
@@ -108,12 +96,12 @@ const Checkout = ({ products }: Props) => {
               city: data.address.city,
               fullName: data.name,
             },
-            cart: cart.items,
+            cart: cart,
           }),
         });
 
         if (response.status === 200) {
-          cart.clearCart();
+          clearCart();
           router.push("/cart/success");
         } else {
           throw new Error("Order submission failed");
@@ -129,7 +117,7 @@ const Checkout = ({ products }: Props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cart.items, data, email, router, toast]
+    [data, email, router, toast]
   );
 
   return (
@@ -137,7 +125,7 @@ const Checkout = ({ products }: Props) => {
       <div className="mt-4 flex flex-col gap-8 w-full justify-between">
         <div className="flex flex-col justify-between items-start">
           <div className="flex flex-col sm:flex-row gap-6">
-            {filteredProducts.map((product) => (
+            {items.map(({ product, quantity, size }) => (
               <div key={product.id} className="flex gap-2">
                 <div className="relative w-16 h-16">
                   <Image
@@ -150,8 +138,8 @@ const Checkout = ({ products }: Props) => {
                 </div>
                 <div>
                   <h1 className="font-semibold text-sm">{product.name}</h1>
-                  <p className="text-xs mb-1">Količina: {product.quantity}</p>
-                  <p className="text-xs mb-1">Veličina: {product.size}</p>
+                  <p className="text-xs mb-1">Količina: {quantity}</p>
+                  <p className="text-xs mb-1">Veličina: {size}</p>
                   <Label
                     className={`${
                       product.oldPrice && "font-bold text-destructive"
@@ -169,20 +157,20 @@ const Checkout = ({ products }: Props) => {
               <div className="flex gap-4 items-center mt-8 justify-between">
                 <Label className="text-sm">Srednja suma</Label>
                 <span className="text-sm text-nowrap">
-                  {formatCurrency(totalCost)}
+                  {formatCurrency(cartTotal)}
                 </span>
               </div>
               <div className="flex items-center mt-8 justify-between">
                 <Label className="text-sm">Dostava</Label>
                 <span className="text-sm text-nowrap">
-                  {formatCurrency(cart.items.length === 0 ? 0 : deliveryFee)}
+                  {formatCurrency(items.length === 0 ? 0 : deliveryFee)}
                 </span>
               </div>
             </div>
             <div className="flex items-center mt-8 justify-between">
               <Label className="text-sm">Ukupna cijena</Label>
               <span className="text-sm text-nowrap">
-                {formatCurrency(totalPrice)}
+                {formatCurrency(cartTotal + deliveryFee)}
               </span>
             </div>
           </div>
@@ -230,7 +218,7 @@ const Checkout = ({ products }: Props) => {
                 <Button variant="secondary" className="w-full">
                   {isLoading
                     ? "Naručujem..."
-                    : `Naruči - ${formatCurrency(totalPrice)}`}
+                    : `Naruči - ${formatCurrency(cartTotal + deliveryFee)}`}
                 </Button>
               </CardFooter>
             </Card>

@@ -1,4 +1,6 @@
-import db from "@/db/db";
+import { ProcessedCart } from "@/app/webhooks/stripe/route";
+import { deliveryFee } from "@/config";
+import { CartItem } from "@/hooks/use-cart";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
@@ -6,10 +8,6 @@ import { v4 as uuidv4 } from "uuid";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: NextRequest) {
-  const deliveryFee = await db.shopSettings.findUnique({
-    where: { id: 1 },
-  });
-
   if (req.method !== "POST") {
     return new NextResponse("Method Not Allowed", {
       status: 405,
@@ -19,18 +17,23 @@ export async function POST(req: NextRequest) {
 
   try {
     const { transformedItems, cartItems } = await req.json();
+    const processedCart: ProcessedCart[] = [];
 
-    console.log("Received transformedItems:", transformedItems);
-    console.log("Received cartItems:", cartItems);
+    cartItems.forEach((item: CartItem) =>
+      processedCart.push({
+        productId: item.product.id,
+        quantity: item.quantity,
+        size: item.size,
+        price: item.product.priceInCents,
+      })
+    );
 
     const customer = await stripe.customers.create({
       metadata: {
         userId: uuidv4(),
-        cart: JSON.stringify(cartItems),
+        cart: JSON.stringify(processedCart),
       },
     });
-
-    console.log("Created customer:", customer.id);
 
     const params: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ["card"],
@@ -39,13 +42,13 @@ export async function POST(req: NextRequest) {
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: {
-              amount: deliveryFee?.deliveryFee! * 100,
+              amount: deliveryFee * 100,
               currency: "bam",
             },
-            display_name: "Free shipping",
+            display_name: "Dostava",
             delivery_estimate: {
-              minimum: { unit: "business_day", value: 5 },
-              maximum: { unit: "business_day", value: 7 },
+              minimum: { unit: "business_day", value: 2 },
+              maximum: { unit: "business_day", value: 5 },
             },
           },
         },
@@ -53,7 +56,7 @@ export async function POST(req: NextRequest) {
       customer: customer.id,
       line_items: transformedItems,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/success`,
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/success/${customer.id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
       shipping_address_collection: {
         allowed_countries: ["BA", "HR", "RS", "ME", "MK", "SI", "BG", "AL"],

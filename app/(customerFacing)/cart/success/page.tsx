@@ -1,6 +1,5 @@
-import Heading from "@/components/Heading";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ProductsCarousel from "@/components/ProductsCarousel";
+import ProductReel from "@/components/ProductReel";
 import { CheckCircle2 } from "lucide-react";
 
 type Props = {};
@@ -29,8 +28,7 @@ const Page = ({}: Props) => {
         </div>
       </div>
       <div className="mt-12">
-        <Heading className="mb-0">Ostali proizvodi</Heading>
-        <ProductsCarousel className="mt-0" />
+        <ProductReel title="Ostali proizvodi" limit={4} />
       </div>
     </MaxWidthWrapper>
   );

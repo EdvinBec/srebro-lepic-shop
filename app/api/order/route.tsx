@@ -1,10 +1,9 @@
 // app/api/delivery-order/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { PrismaClient } from "@prisma/client";
 import { CartItem } from "@/lib/CartContext";
-
-const db = new PrismaClient();
+import db from "@/db/db";
+import { deliveryFee } from "@/config";
 
 type Customer = {
   email: string;
@@ -17,15 +16,6 @@ type Customer = {
 };
 
 const createOrder = async (customer: Customer, data: CartItem[]) => {
-  const deliveryFeeRecord = await db.shopSettings.findUnique({
-    where: { id: 1 },
-  });
-
-  if (!deliveryFeeRecord) {
-    throw new Error("Delivery fee settings not found");
-  }
-
-  const deliveryFee = deliveryFeeRecord.deliveryFee;
   const cart: CartItem[] = data;
   let totalPrice = 0;
 

@@ -1,16 +1,22 @@
 import db from "@/db/db";
-import { CartItem } from "@/lib/CartContext";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
+export type ProcessedCart = {
+  productId: string;
+  quantity: number;
+  size: number;
+  price: number;
+};
+
 const createOrder = async (
   customer: Stripe.Customer,
   data: Stripe.Checkout.Session
 ) => {
-  const cart: CartItem[] = JSON.parse(customer.metadata.cart);
+  const cart: ProcessedCart[] = JSON.parse(customer.metadata.cart);
 
   let user = await db.user.findUnique({
     where: {
@@ -33,9 +39,6 @@ const createOrder = async (
     });
   }
 
-  console.log("Cart Items:", cart);
-  console.log("User ID:", user.id);
-
   // Create the order within a transaction
   await db.$transaction(async (tx) => {
     const order = await tx.order.create({
@@ -44,8 +47,8 @@ const createOrder = async (
         price: data.amount_total!,
         paymentMethod: "Kartica",
         products: {
-          create: cart.map((item: CartItem) => ({
-            productId: item.id,
+          create: cart.map((item: ProcessedCart) => ({
+            productId: item.productId,
             quantity: item.quantity,
             size: item.size,
             price: item.price * 100,
