@@ -1,39 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import MaxWidthWrapper from "../MaxWidthWrapper";
-import Image from "next/image";
 import Link from "next/link";
-import { NavLink } from "@/types";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";
 import Cart from "../Cart";
 
 type Props = {};
-
-const NavLinks: NavLink[] = [
-  {
-    label: "Prstenje",
-    href: "/prstenje",
-  },
-  {
-    label: "Ogrlice",
-    href: "/ogrlice",
-  },
-  {
-    label: "Naušnice",
-    href: "/nausnice",
-  },
-];
-
-const DropdownLinks: NavLink[] = [
-  {
-    label: "Satovi",
-    href: "/kategorija/satovi",
-  },
-  {
-    label: "Nakit sa posvetom",
-    href: "/kategorija/nakit-sa-posvetom",
-  },
-];
 
 const NavigationBar = (props: Props) => {
   return (

@@ -3,14 +3,16 @@ import { Icons } from "./Icons";
 import Link from "next/link";
 import db from "@/db/db";
 import ProductListing from "./ProductListing";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  title: string;
+  title?: string;
   subtitle?: string;
   href?: string;
   category?: string;
   isFeatured?: boolean;
   limit?: number;
+  className?: string;
 };
 
 type ReelProductFilter = {
@@ -26,6 +28,7 @@ const ProductReel = async ({
   category,
   isFeatured,
   limit,
+  className,
 }: Props) => {
   let filterCondition: ReelProductFilter = {
     isAvailabileForPurchase: true,
@@ -36,6 +39,10 @@ const ProductReel = async ({
       ...filterCondition,
       category,
     };
+  }
+
+  if (category === "ponuda") {
+    filterCondition = { isAvailabileForPurchase: true };
   }
 
   if (isFeatured) {
@@ -58,7 +65,7 @@ const ProductReel = async ({
   });
 
   return (
-    <section className="py-12">
+    <section className={cn("py-12", className)}>
       <div className="md:flex md:items-center md:justify-between mb-4">
         <div className="max-w-2xl px-4 lg:max-w-4xl lg:px-0 text-center md:text-start">
           {title ? (

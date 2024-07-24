@@ -9,24 +9,17 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import React from "react";
-import ProductSortAndGallery from "../_components/ProductSortAndGallery";
 import db from "@/db/db";
+import ProductReel from "@/components/ProductReel";
 
 type Props = {
   params: { slug: string };
 };
 
 const CategoryPage = async ({ params }: Props) => {
-  const products = await db.product.findMany({
-    where: {
-      isAvailabileForPurchase: true,
-      ...(params.slug !== "ponuda" && { category: params.slug }),
-    },
-  });
-
   return (
-    <div className="flex gap-4">
-      <div className="w-1/4 md:flex flex-col items-start hidden">
+    <div className="flex flex-col lg:flex-row gap-4 mt-4">
+      <div className="md:flex flex-col items-start hidden">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -45,7 +38,7 @@ const CategoryPage = async ({ params }: Props) => {
           {params.slug}
         </Heading>
       </div>
-      <ProductSortAndGallery products={products} />
+      <ProductReel className="pt-2 lg:pt-8" category={params.slug} />
     </div>
   );
 };

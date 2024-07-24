@@ -91,7 +91,7 @@ const ImageSlider = ({ urls }: Props) => {
             <Image
               fill
               loading="eager"
-              className="-z-10 h-full w-full object-cover object-center"
+              className="-z-10 h-full w-full min-w-3xl object-cover object-center"
               src={url}
               alt="Product image"
             />

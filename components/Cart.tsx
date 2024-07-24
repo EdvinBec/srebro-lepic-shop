@@ -27,7 +27,7 @@ const Cart = (props: Props) => {
 
   const itemCount = items.length;
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.priceInCents,
+    (total, { product, quantity }) => total + product.priceInCents * quantity,
     0
   );
 

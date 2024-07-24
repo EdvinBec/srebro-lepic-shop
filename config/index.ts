@@ -1,11 +1,11 @@
 export const PRODUCT_CATEGORIES = [
   {
-    label: "Prsten",
+    label: "Prstenje",
     value: "prstenje" as const,
     featured: [
       {
         name: "Zaručničko",
-        href: "#",
+        href: "/kategorija/zarucnicko",
         imageSrc: "/assets/nav/rings/proposal.jpg",
       },
       {
@@ -21,44 +21,45 @@ export const PRODUCT_CATEGORIES = [
     ],
   },
   {
-    label: "Ogrlica",
+    label: "Ogrlice",
     value: "ogrlice" as const,
     featured: [
       {
         name: "Sa kamenom",
         href: "#",
-        imageSrc: "",
+        imageSrc: "/assets/nav/necklace/ogrlica-kamen.jpg",
       },
       {
         name: "Sa znakom",
         href: "#",
-        imageSrc: "",
+        imageSrc: "/assets/nav/necklace/ogrlica-znak.jpg",
       },
       {
         name: "Sa porukom",
         href: "#",
-        imageSrc: "",
+        imageSrc: "/assets/nav/necklace/ogrlica1.jpg",
       },
     ],
   },
   {
-    label: "Sat",
+    label: "Narukvice",
+    value: "narukvice" as const,
+    featured: [
+      {
+        name: "Narukvice",
+        href: "/kategorija/narukvice",
+        imageSrc: "/assets/nav/narukvica.jpg",
+      },
+    ],
+  },
+  {
+    label: "Satovi",
     value: "satovi" as const,
     featured: [
       {
         name: "Satovi",
-        href: "#",
-        imageSrc: "",
-      },
-      {
-        name: "Sa znakom",
-        href: "#",
-        imageSrc: "",
-      },
-      {
-        name: "Sa porukom",
-        href: "#",
-        imageSrc: "",
+        href: "/kategorija/satovi",
+        imageSrc: "/assets/nav/watch.jpg",
       },
     ],
   },

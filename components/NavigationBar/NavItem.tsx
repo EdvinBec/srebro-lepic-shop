@@ -68,6 +68,9 @@ const NavItem = ({ category, handleOpen, isAnyOpen, isOpen }: Props) => {
                           />
                         </div>
                         <Link
+                          onClick={() => {
+                            setTimeout(handleOpen, 200);
+                          }}
                           className="mt-6 block text-gray-900 font-medium"
                           href={item.href}
                         >
