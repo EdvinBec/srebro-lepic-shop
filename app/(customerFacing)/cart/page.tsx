@@ -204,7 +204,7 @@ const Page = ({}: Props) => {
                 >
                   <TruckIcon
                     aria-hidden="true"
-                    className="h-4 w-4 flex-shrink-0"
+                    className="h-4 w-4 flex-shrink-0 hidden md:block"
                   />
                   <span className="text-sm text-gray-800 font-medium">
                     Plaćanje pouzećem
@@ -219,7 +219,7 @@ const Page = ({}: Props) => {
                 >
                   <CreditCardIcon
                     aria-hidden="true"
-                    className="h-4 w-4 flex-shrink-0"
+                    className="h-4 w-4 flex-shrink-0 hidden md:block"
                   />
                   <span className="text-sm text-gray-800 font-medium">
                     Plaćanje karticom
