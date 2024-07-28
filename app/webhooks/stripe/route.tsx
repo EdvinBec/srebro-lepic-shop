@@ -72,7 +72,7 @@ const createOrder = async (
       await resend.emails.send({
         from: process.env.SENDER_EMAIL!, // Make sure to replace this with your verified sender
         to: user.email,
-        subject: `Potvrda narudžbe #${order.id}`,
+        subject: `Hvala vam za narudžbu. #${order.id}`,
         html: ReceiptEmailHtml({
           date: new Date(),
           email: user.email,

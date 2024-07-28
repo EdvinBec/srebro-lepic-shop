@@ -1,5 +1,6 @@
 import { ProcessedCart } from "@/app/webhooks/stripe/route";
 import { deliveryFee } from "@/config";
+import db from "@/db/db";
 import { formatCurrency } from "@/lib/formatters";
 import {
   Body,
@@ -8,7 +9,6 @@ import {
   Head,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Row,
@@ -18,7 +18,6 @@ import {
 } from "@react-email/components";
 import { format } from "date-fns";
 import React from "react";
-import { Icons } from "../Icons";
 
 type Props = {
   products: ProcessedCart[];
@@ -27,7 +26,7 @@ type Props = {
   orderId: number;
 };
 
-const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
+export const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
   const total =
     products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0) +
     deliveryFee;
@@ -41,17 +40,17 @@ const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
         <Container style={container}>
           <Section>
             <Column>
-              <Icons.logo className="w-[100px] h-auto" />
+              <h1 style={logo}>Srebro Lepic</h1>
             </Column>
 
             <Column align="right" style={tableCell}>
-              <Text style={heading}>POTVRDA NARUDŽBE</Text>
+              <Text style={heading}>Potvrda narudžbe</Text>
             </Column>
           </Section>
           <Section style={informationTable}>
             <Row style={informationTableRow}>
               <Column style={informationTableColumn}>
-                <Text style={informationTableLabel}>EMAIL</Text>
+                <Text style={informationTableLabel}>Email</Text>
                 <Link
                   style={{
                     ...informationTableValue,
@@ -62,14 +61,14 @@ const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
               </Column>
 
               <Column style={informationTableColumn}>
-                <Text style={informationTableLabel}>DATUM NARUDŽBE</Text>
+                <Text style={informationTableLabel}>Datum narudžbe</Text>
                 <Text style={informationTableValue}>
                   {format(date, "dd MMM yyyy")}
                 </Text>
               </Column>
 
               <Column style={informationTableColumn}>
-                <Text style={informationTableLabel}>BROJ NARUDŽBE</Text>
+                <Text style={informationTableLabel}>Broj narudžbe</Text>
                 <Link
                   style={{
                     ...informationTableValue,
@@ -80,11 +79,11 @@ const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
               </Column>
             </Row>
           </Section>
-          {products.map((product: ProcessedCart) => {
+          {products.map((product: ProcessedCart, i) => {
             return (
               <Section key={product.productId}>
                 <Column style={{ paddingLeft: "22px" }}>
-                  <Text style={productTitle}>{product.productId}</Text>
+                  <Text style={productTitle}>Proizvod {i + 1}</Text>
                 </Column>
                 <Column style={{ paddingLeft: "22px" }}>
                   <Text style={productTitle}>Količina: {product.quantity}</Text>
@@ -114,7 +113,7 @@ const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
           <Hr style={productPriceLine} />
           <Section align="right">
             <Column style={tableCell} align="right">
-              <Text style={productPriceTotal}>TOTAL</Text>
+              <Text style={productPriceTotal}>Ukupno</Text>
             </Column>
             <Column style={productPriceVerticalLine}></Column>
             <Column style={productPriceLargeWrapper}>
@@ -124,12 +123,8 @@ const ReceiptEmail = ({ date, email, orderId, products }: Props) => {
           <Hr style={productPriceLineBottom} />
 
           <Text style={footerLinksWrapper}>
-            <Link href="www.srebrolepic.com/terms&conditions">
-              Terms & Conditions
-            </Link>{" "}
-            •{" "}
             <Link href="www.srebrolepic.com/privacy-policy">
-              Privacy Policy{" "}
+              Politika Privatnosti
             </Link>
           </Text>
           <Text style={footerCopyright}>
@@ -173,6 +168,12 @@ const tableCell = { display: "table-cell" };
 const heading = {
   fontSize: "28px",
   fontWeight: "300",
+  color: "#888888",
+};
+
+const logo = {
+  fontSize: "32px",
+  fontWeight: "700",
   color: "#888888",
 };
 

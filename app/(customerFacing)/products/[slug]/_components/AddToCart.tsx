@@ -39,9 +39,7 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
       <div className="flex gap-4">
         <SizePicker
           className={`${
-            product.category === "prstenje" || product.category == "ogrlice"
-              ? "block"
-              : "hidden"
+            product.category === "prstenje" ? "block" : "hidden"
           } w-full`}
           unit={product.category === "ogrlice" ? "cm" : ""}
           onSave={(item) => setSize(item)}

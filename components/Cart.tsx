@@ -18,6 +18,7 @@ import { useCart } from "@/hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
 import CartItem from "./CartItem";
 import { deliveryFee } from "@/config";
+import Button from "./Button/Button";
 
 type Props = {};
 
@@ -77,13 +78,10 @@ const Cart = (props: Props) => {
               </div>
               <SheetFooter>
                 <SheetTrigger asChild>
-                  <Link
-                    href="/cart"
-                    className={buttonVariants({
-                      className: "w-full rounded-[4px]",
-                    })}
-                  >
-                    Nastavi na plaćanje
+                  <Link href="/cart" className="w-full">
+                    <Button variant="secondary" className="w-full">
+                      Nastavi na plaćanje
+                    </Button>
                   </Link>
                 </SheetTrigger>
               </SheetFooter>

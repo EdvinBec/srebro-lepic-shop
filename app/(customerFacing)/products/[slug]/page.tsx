@@ -11,6 +11,8 @@ import { CheckIcon, ShieldIcon, TruckIcon } from "lucide-react";
 import ImageSlider from "@/components/ImageSlider";
 import ProductReel from "@/components/ProductReel";
 import AddToCart from "./_components/AddToCart";
+import { cn } from "@/lib/utils";
+import Price from "@/components/Price";
 
 type Props = {
   params: {
@@ -77,9 +79,12 @@ const page = async ({ params: { slug } }: Props) => {
 
             <section className="mt-4">
               <div className="flex items-center">
-                <p className="font-medium text-gray-900">
-                  {formatCurrency(product.priceInCents)}
-                </p>
+                <Price
+                  className="-mt-1"
+                  oldPrice={product.oldPrice}
+                  price={product.priceInCents}
+                />
+
                 <div className="ml-4 border-l text-muted-foreground border-gray-300 pl-4">
                   {label}
                 </div>

@@ -3,9 +3,11 @@
 import { PRODUCT_CATEGORIES } from "@/config";
 import { CartProduct, useCart } from "@/hooks/use-cart";
 import { formatCurrency } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import Price from "./Price";
 
 type Props = {
   product: CartProduct;
@@ -56,9 +58,7 @@ const CartItem = ({ product, size, quantity, message }: Props) => {
         </div>
 
         <div className="flex flex-col space-y-1 font-medium">
-          <span className="ml-auto line-clamp-1 text-sm">
-            {formatCurrency(product.priceInCents * quantity)}
-          </span>
+          <Price oldPrice={product.oldPrice} price={product.priceInCents} />
         </div>
       </div>
     </div>

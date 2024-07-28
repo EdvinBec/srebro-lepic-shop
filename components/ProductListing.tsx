@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Icons } from "./Icons";
 import { formatCurrency } from "@/lib/formatters";
 import ImageSlider from "./ImageSlider";
+import Price from "./Price";
 
 type Props = {
   product: Product | null;
@@ -49,23 +50,7 @@ const ProductListing = ({ index, product }: Props) => {
           <h3 className="mt-1 font-medium text-sm text-gray-700 ">
             {product.name}
           </h3>
-          <div className="flex gap-4 items-end">
-            <p
-              className={cn("mt-3 font-medium text-sm text-gray-900", {
-                hidden: product.oldPrice <= 0,
-                "font-bold text-destructive": product.oldPrice > 0,
-              })}
-            >
-              {formatCurrency(product.priceInCents)}
-            </p>
-            <p
-              className={cn("mt-3 font-medium text-sm text-gray-900", {
-                "text-gray-400 font-normal text-xs": product.oldPrice > 0,
-              })}
-            >
-              {formatCurrency(product.priceInCents)}
-            </p>
-          </div>
+          <Price oldPrice={product.oldPrice} price={product.priceInCents} />
         </div>
       </Link>
     );

@@ -81,20 +81,10 @@ const createOrder = async (customer: Customer, data: CartItem[]) => {
 
     const newCart: ProcessedCart[] = [];
 
-    cart.forEach((item) => {
-      newCart.push({
-        productId: item.id,
-        quantity: item.quantity,
-        price: item.price,
-        size: item.size,
-        message: item.message,
-      });
-    });
-
     await resend.emails.send({
       from: process.env.SENDER_EMAIL!, // Make sure to replace this with your verified sender
       to: user.email,
-      subject: `Potvrda narudžbe #${order.id}`,
+      subject: `Hvala vam za narudžbu. #${order.id}`,
       html: ReceiptEmailHtml({
         date: new Date(),
         email: user.email,

@@ -1,6 +1,7 @@
 "use client";
 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import Price from "@/components/Price";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { deliveryFee } from "@/config";
@@ -93,6 +94,7 @@ const Page = ({}: Props) => {
               >
                 {items.map(({ product, quantity, size }) => {
                   const image = product.image[0];
+                  console.log(product);
 
                   return (
                     <li key={product.id} className="flex py-6 sm:py-10">
@@ -132,9 +134,10 @@ const Page = ({}: Props) => {
                               </p>
                             </div>
 
-                            <p className="mt-1 text-sm font-medium text-gray-900">
-                              {formatCurrency(product.priceInCents * quantity)}
-                            </p>
+                            <Price
+                              oldPrice={product.oldPrice}
+                              price={product.priceInCents}
+                            />
                           </div>
 
                           <div className="mt-4 sm:mt-0 sm:pr-9 w-20">

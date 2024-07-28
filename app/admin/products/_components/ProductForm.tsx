@@ -119,13 +119,6 @@ const ProductForm = ({ className, product }: Props) => {
         <div className={category === "prstenje" ? "block" : "hidden"}>
           <RingSizePicker save={setSize} prevSizes={product?.availableSizes!} />
         </div>
-        <div className={category === "ogrlice" ? "block" : "hidden"}>
-          <NecklaceSizePicker
-            save={setSize}
-            prevSizes={product?.availableSizes!}
-          />
-        </div>
-
         <input
           type="hidden"
           name="sizes"
