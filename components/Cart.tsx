@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,12 +10,10 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { ShoppingCartIcon } from "lucide-react";
-import { CartContext } from "@/lib/CartContext";
 import { Separator } from "./ui/separator";
 import { formatCurrency } from "@/lib/formatters";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
-import Image from "next/image";
 import { useCart } from "@/hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
 import CartItem from "./CartItem";
@@ -51,8 +49,9 @@ const Cart = (props: Props) => {
           <>
             <div className="flex w-full flex-col pr-6">
               <ScrollArea>
-                {items.map(({ product, quantity, size }) => (
+                {items.map(({ product, quantity, size, message }) => (
                   <CartItem
+                    message={message!}
                     product={product}
                     size={size}
                     quantity={quantity}

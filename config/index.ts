@@ -4,19 +4,9 @@ export const PRODUCT_CATEGORIES = [
     value: "prstenje" as const,
     featured: [
       {
-        name: "Zaručničko",
-        href: "/kategorija/zarucnicko",
+        name: "Prstenje",
+        href: "/kategorija/prstenje",
         imageSrc: "/assets/nav/rings/proposal.jpg",
-      },
-      {
-        name: "Burme",
-        href: "#",
-        imageSrc: "/assets/nav/rings/mariage.jpg",
-      },
-      {
-        name: "Swarovski",
-        href: "#",
-        imageSrc: "/assets/nav/rings/diamond.jpg",
       },
     ],
   },
@@ -25,18 +15,13 @@ export const PRODUCT_CATEGORIES = [
     value: "ogrlice" as const,
     featured: [
       {
-        name: "Sa kamenom",
-        href: "#",
+        name: "Ogrlice",
+        href: "/kategorija/ogrlice",
         imageSrc: "/assets/nav/necklace/ogrlica-kamen.jpg",
       },
       {
-        name: "Sa znakom",
-        href: "#",
-        imageSrc: "/assets/nav/necklace/ogrlica-znak.jpg",
-      },
-      {
         name: "Sa porukom",
-        href: "#",
+        href: "/kategorija/sa-porukom",
         imageSrc: "/assets/nav/necklace/ogrlica1.jpg",
       },
     ],
@@ -49,6 +34,11 @@ export const PRODUCT_CATEGORIES = [
         name: "Narukvice",
         href: "/kategorija/narukvice",
         imageSrc: "/assets/nav/narukvica.jpg",
+      },
+      {
+        name: "Sa porukom",
+        href: "/kategorija/sa-porukom",
+        imageSrc: "/assets/nav/necklace/ogrlica-znak.jpg",
       },
     ],
   },

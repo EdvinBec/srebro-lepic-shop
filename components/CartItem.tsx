@@ -11,9 +11,10 @@ type Props = {
   product: CartProduct;
   quantity: number;
   size: number;
+  message: string;
 };
 
-const CartItem = ({ product, size, quantity }: Props) => {
+const CartItem = ({ product, size, quantity, message }: Props) => {
   const { removeItem } = useCart();
 
   return (
@@ -37,6 +38,9 @@ const CartItem = ({ product, size, quantity }: Props) => {
             </span>
             <span className="line-clamp-1 text-xs text-mute capitalized">
               Količina: <span className="font-bold">{quantity}</span>
+            </span>
+            <span className="line-clamp-1 text-xs text-mute capitalized">
+              Poruka: <span className="font-bold">{message}</span>
             </span>
 
             <div className="mt-3 text-xs text-muted-foreground">

@@ -19,13 +19,14 @@ export type CartItem = {
   product: CartProduct;
   quantity: number;
   size: number;
+  message: string;
 };
 
 // Define CartState type
 type CartState = {
   items: CartItem[];
   getProductQuantity: (id: string, size: number) => number;
-  addItem: (product: CartProduct, size: number) => void;
+  addItem: (product: CartProduct, size: number, message: string) => void;
   removeItem: (id: string, size: number) => void;
   deleteFromCart: (id: string, size: number) => void;
   getTotalCost: () => number;
@@ -42,22 +43,27 @@ export const useCart = create<CartState>()(
         );
         return item ? item.quantity : 0;
       },
-      addItem: (product, size) =>
+      addItem: (product, size, message) =>
         set((state) => {
           const existingItem = state.items.find(
-            (item) => item.product.id === product.id && item.size === size
+            (item) =>
+              item.product.id === product.id &&
+              item.size === size &&
+              item.message === message
           );
           if (existingItem) {
             return {
               items: state.items.map((item) =>
-                item.product.id === product.id && item.size === size
+                item.product.id === product.id &&
+                item.size === size &&
+                item.message === message
                   ? { ...item, quantity: item.quantity + 1 }
                   : item
               ),
             };
           } else {
             return {
-              items: [...state.items, { product, quantity: 1, size }],
+              items: [...state.items, { product, quantity: 1, size, message }],
             };
           }
         }),

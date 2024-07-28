@@ -23,7 +23,7 @@ export default function Home() {
           heading="PERSONALIZOVANI POKLONI"
           buttonLabel="Istražite našu kolekciju"
           image={Nadia}
-          href="/kategorija/nakit-sa-posvetom"
+          href="/kategorija/sa-porukom"
         >
           <div>
             <p className="text-sm mt-4">

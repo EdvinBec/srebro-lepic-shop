@@ -2,14 +2,18 @@ import db from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
+import { Resend } from "resend";
+import { ReceiptEmailHtml } from "@/components/emails/ReceiptEmail";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export type ProcessedCart = {
   productId: string;
   quantity: number;
   size: number;
   price: number;
+  message: string;
 };
 
 const createOrder = async (
@@ -52,6 +56,7 @@ const createOrder = async (
             quantity: item.quantity,
             size: item.size,
             price: item.price * 100,
+            message: item.message,
           })),
         },
       },
@@ -61,6 +66,25 @@ const createOrder = async (
     });
 
     console.log("Order created successfully:", order);
+
+    // Send confirmation email using resend
+    try {
+      await resend.emails.send({
+        from: process.env.SENDER_EMAIL!, // Make sure to replace this with your verified sender
+        to: user.email,
+        subject: `Potvrda narudžbe #${order.id}`,
+        html: ReceiptEmailHtml({
+          date: new Date(),
+          email: user.email,
+          orderId: order.id,
+          products: cart as ProcessedCart[],
+        }),
+      });
+
+      console.log("Confirmation email sent successfully.");
+    } catch (error) {
+      console.error("Error sending confirmation email:", error);
+    }
   });
 };
 
@@ -88,10 +112,6 @@ export async function POST(req: NextRequest) {
     try {
       const customer = await stripe.customers.retrieve(data.customer as string);
       await createOrder(customer as Stripe.Customer, data);
-
-      // Send confirmation email
-
-      console.log("Confirmation email sent successfully.");
     } catch (error) {
       console.error("Error processing checkout session:", error);
       return new NextResponse("Webhook Error", {

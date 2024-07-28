@@ -93,6 +93,7 @@ const ProductForm = ({ className, product }: Props) => {
           <option value="ogrlice">Ogrlice</option>
           <option value="nausnice">Nausnice</option>
           <option value="satovi">Satovi</option>
+          <option value="sa-porukom">Sa porukom</option>
         </select>
         {error!.category && (
           <div className="text-destructive">{error!.category}</div>

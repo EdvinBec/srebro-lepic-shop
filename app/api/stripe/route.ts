@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
         quantity: item.quantity,
         size: item.size,
         price: item.product.priceInCents,
+        message: item.message,
       })
     );
 

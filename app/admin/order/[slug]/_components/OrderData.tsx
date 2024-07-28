@@ -11,7 +11,11 @@ import { Printer } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-type combinedType = Product & { size: number; quantity: number };
+type combinedType = Product & {
+  size: number;
+  quantity: number;
+  message: string;
+};
 
 type Props = {
   order: {
@@ -105,6 +109,7 @@ const OrderData = ({ order, user, products }: Props) => {
               <th>Proizvod</th>
               <th>Količina</th>
               <th>Veličina</th>
+              <th>Poruka</th>
               <th>Cijena</th>
             </tr>
           </thead>
@@ -128,6 +133,7 @@ const OrderData = ({ order, user, products }: Props) => {
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
                 <td>{product.size}</td>
+                <td>{product.message}</td>
                 <td>{formatCurrency(product.priceInCents!)}</td>
               </tr>
             ))}

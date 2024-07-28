@@ -5,10 +5,7 @@ import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import AttentionRow from "@/components/AttentionRow";
 import localFont from "@next/font/local";
 import Footer from "@/components/Footer";
-import StoreProvider from "@/components/provider/StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
-import CartProvider from "@/lib/CartContext";
-import db from "@/db/db";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -52,13 +49,11 @@ export default async function RootLayout({
       >
         <main className="realtive flex flex-col min-h-screen">
           <div className="flex-grow flex-1">
-            <CartProvider>
-              <AttentionRow />
-              <NavigationBar />
-              {children}
-              <Toaster />
-              <Footer className="mt-12" />
-            </CartProvider>
+            <AttentionRow />
+            <NavigationBar />
+            {children}
+            <Toaster />
+            <Footer className="mt-12" />
           </div>
         </main>
       </body>

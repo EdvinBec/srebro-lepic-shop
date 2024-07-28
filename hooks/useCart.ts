@@ -1,5 +1,4 @@
 import { transformCartItems } from "@/utils/helpers";
-import { Product } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { CartProduct } from "./use-cart";
@@ -8,6 +7,7 @@ export type CartItem = {
   product: CartProduct;
   quantity: number;
   size: number;
+  message: string;
 };
 
 export const createCheckoutSession = async (cartItems: CartItem[]) => {

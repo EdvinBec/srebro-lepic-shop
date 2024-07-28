@@ -41,7 +41,12 @@ const page = async ({ params: { slug } }: Props) => {
       },
     });
 
-    products.push({ ...product!, quantity: item.quantity, size: item.size });
+    products.push({
+      ...product!,
+      quantity: item.quantity,
+      size: item.size,
+      message: item.message,
+    });
   }
 
   console.log(user);

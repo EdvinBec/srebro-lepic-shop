@@ -36,12 +36,13 @@ const Checkout = ({}: Props) => {
 
   const cart: any[] = [];
 
-  items.map(({ product, quantity, size }) => {
+  items.map(({ product, quantity, size, message }) => {
     cart.push({
       id: product.id,
       size: size,
       quantity: quantity,
       price: product.priceInCents,
+      message: message,
     });
   });
 
