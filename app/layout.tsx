@@ -47,17 +47,13 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${Boska.variable} font-boska`}>
       <link rel="icon" href="/icon.svg" sizes="any" />
-      <body
-        className={cn("relative h-full font-sans antialiased", inter.className)}
-      >
+      <body className={cn("relative font-sans antialiased ", inter.className)}>
         <main className="realtive flex flex-col min-h-screen">
-          <div className="flex-grow flex-1">
-            <AttentionRow />
-            <NavigationBar />
-            {children}
-            <Toaster />
-            <Footer className="mt-12" />
-          </div>
+          <AttentionRow />
+          <NavigationBar />
+          {children}
+          <Toaster />
+          <Footer className="mt-auto" />
         </main>
       </body>
     </html>
