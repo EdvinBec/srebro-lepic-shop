@@ -64,7 +64,11 @@ const Checkout = ({}: Props) => {
         return;
       }
 
-      if (!data) {
+      const isEmpty = Object.values(data!).some(
+        (value) => value === "" || value === null || value === undefined
+      );
+
+      if (isEmpty) {
         toast({
           title: "Nema podataka za dostavu",
           description: "Molimo unesite podatke za dostavu",
@@ -90,12 +94,12 @@ const Checkout = ({}: Props) => {
           body: JSON.stringify({
             customer: {
               email,
-              zip: data.address.postal_code,
-              address: data.address.line1,
-              phone: data.phone,
-              country: data.address.country,
-              city: data.address.city,
-              fullName: data.name,
+              zip: data?.address.postal_code,
+              address: data?.address.line1,
+              phone: data?.phone,
+              country: data?.address.country,
+              city: data?.address.city,
+              fullName: data?.name,
             },
             cart: cart,
           }),
@@ -198,7 +202,9 @@ const Checkout = ({}: Props) => {
                   />
                 </div>
                 <AddressElement
-                  onChange={(e) => setData(e.value as DeliveryFormData)}
+                  onChange={(e) => {
+                    setData(e.value as DeliveryFormData);
+                  }}
                   options={{
                     mode: "shipping",
                     validation: {

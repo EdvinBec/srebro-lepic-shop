@@ -65,7 +65,7 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
           variant="secondary"
           onClick={() => {
             if (product.category === "sa-porukom") {
-              if (message.length > 8) {
+              if (message.length > 8 || message.length <= 0) {
                 toast({
                   title: "Unesite rijec do 8 slova",
                   variant: "destructive",
