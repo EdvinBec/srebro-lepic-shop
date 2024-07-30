@@ -7,6 +7,8 @@ import localFont from "@next/font/local";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import Head from "next/head";
+import icon from "@/public/favicon.ico";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,6 +46,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${Boska.variable} font-boska`}>
+      <link rel="icon" href="/icon.svg" sizes="any" />
       <body
         className={cn("relative h-full font-sans antialiased", inter.className)}
       >
