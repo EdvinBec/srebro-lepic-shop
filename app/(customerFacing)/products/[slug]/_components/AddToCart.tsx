@@ -73,10 +73,7 @@ const AddToCart = ({ product, availableSizes, className, id }: Props) => {
                 return;
               }
             }
-            if (
-              product.category === "prstenje" ||
-              product.category === "ogrlice"
-            ) {
+            if (product.category === "prstenje") {
               if (size <= 0) {
                 toast({
                   title: "Odaberite veličinu",
