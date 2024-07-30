@@ -43,6 +43,17 @@ export const PRODUCT_CATEGORIES = [
     ],
   },
   {
+    label: "Naušnice",
+    value: "nausnice" as const,
+    featured: [
+      {
+        name: "Naušnice",
+        href: "/kategorija/nausnice",
+        imageSrc: "/assets/nav/earings1.jpg",
+      },
+    ],
+  },
+  {
     label: "Satovi",
     value: "satovi" as const,
     featured: [
