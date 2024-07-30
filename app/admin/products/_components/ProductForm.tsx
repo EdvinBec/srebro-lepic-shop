@@ -11,9 +11,7 @@ import { addProduct, updateProduct } from "../../_actions/products";
 import { useFormState, useFormStatus } from "react-dom";
 import { Product } from "@prisma/client";
 import Image from "next/image";
-import { FancyMultiSelect, OPTION } from "@/components/ui/multi-select";
 import { RingSizePicker } from "../../_components/RingSizePicker";
-import { NecklaceSizePicker } from "../../_components/NecklaceSizePicker";
 
 type Props = {
   className?: string;
@@ -49,7 +47,7 @@ const ProductForm = ({ className, product }: Props) => {
           required
           defaultValue={product?.name || ""}
         />
-        {error!.name && <div className="text-destructive">{error!.name}</div>}
+        {error?.name && <div className="text-destructive">{error!.name}</div>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="priceInCents">Cijena</Label>
@@ -64,7 +62,7 @@ const ProductForm = ({ className, product }: Props) => {
         <div className="text-muted-foreground">
           {formatCurrency(priceInCents || 0)}
         </div>
-        {error!.priceInCents && (
+        {error?.priceInCents && (
           <div className="text-destructive">{error!.priceInCents}</div>
         )}
       </div>
@@ -76,7 +74,7 @@ const ProductForm = ({ className, product }: Props) => {
           required
           defaultValue={product?.description || ""}
         />
-        {error!.description && (
+        {error?.description && (
           <div className="text-destructive">{error!.description}</div>
         )}
       </div>
@@ -95,7 +93,7 @@ const ProductForm = ({ className, product }: Props) => {
           <option value="satovi">Satovi</option>
           <option value="sa-porukom">Sa porukom</option>
         </select>
-        {error!.category && (
+        {error?.category && (
           <div className="text-destructive">{error!.category}</div>
         )}
       </div>
@@ -110,7 +108,7 @@ const ProductForm = ({ className, product }: Props) => {
           defaultValue={product?.weightInGrams || ""}
         />
         <div className="text-muted-foreground">{formatWeight(weight || 0)}</div>
-        {error!.weight && (
+        {error?.weight && (
           <div className="text-destructive">{error!.weight}</div>
         )}
       </div>
@@ -125,7 +123,7 @@ const ProductForm = ({ className, product }: Props) => {
           multiple
           value={selectedSize?.join(",")}
         />
-        {error!.sizes && <div className="text-destructive">{error!.sizes}</div>}
+        {error?.sizes && <div className="text-destructive">{error!.sizes}</div>}
       </div>
 
       <div className="space-y-2">
@@ -145,7 +143,7 @@ const ProductForm = ({ className, product }: Props) => {
             alt="Product Image"
           />
         )}
-        {error!.image && <div className="text-destructive">{error!.image}</div>}
+        {error?.image && <div className="text-destructive">{error!.image}</div>}
       </div>
       <SubmitButton />
     </form>
